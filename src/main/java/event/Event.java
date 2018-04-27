@@ -15,14 +15,14 @@ public class Event {
     public List<Category> categories;
     public Integer price;
 
-    public Event(Integer id, String name, String description, String status, Integer limit, Integer tickets_left, Venue venue, Date date, Integer price) { //List<Category> categories
+    public Event(Integer id, String name, String description, String status, Integer limit, Integer tickets_left, Date date, Integer price) { //List<Category> categories
         this.id = id;
         this.name = name;
         this.description = description;
         this.status = status;
         this.limit = limit;
         this.tickets_left = tickets_left;
-        this.venue = venue;
+        //this.venue = venue;
         this.date = date;
         //this.categories = categories;
         this.price = price;
