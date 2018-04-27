@@ -6,7 +6,7 @@ import java.util.List;
 public class Event {
     public Integer id;
     public String name;
-    public String describtion;
+    public String description;
     public String status;
     public Integer limit;
     public Integer tickets_left;
@@ -14,6 +14,19 @@ public class Event {
     public Date date;
     public List<Category> categories;
     public Integer price;
+
+    public Event(Integer id, String name, String description, String status, Integer limit, Integer tickets_left, Venue venue, Date date, Integer price) { //List<Category> categories
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.limit = limit;
+        this.tickets_left = tickets_left;
+        this.venue = venue;
+        this.date = date;
+        //this.categories = categories;
+        this.price = price;
+    }
 
     public Integer getId() {
         return id;
@@ -31,12 +44,12 @@ public class Event {
         this.name = name;
     }
 
-    public String getDescribtion() {
-        return describtion;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescribtion(String describtion) {
-        this.describtion = describtion;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getStatus() {
