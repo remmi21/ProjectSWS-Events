@@ -1,8 +1,13 @@
 package event;
 
 public class Category {
-    public Integer id;
-    public String Name;
+    private Integer id;
+    private String Name;
+
+    public Category(Integer id, String name) {
+        this.id = id;
+        Name = name;
+    }
 
     public Integer getId() {
         return id;

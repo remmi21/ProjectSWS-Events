@@ -15,7 +15,7 @@ public class Event {
     public List<Category> categories;
     public Integer price;
 
-    public Event(Integer id, String name, String description, String status, Integer limit, Integer tickets_left, List<Venue> venueList, Date date, /*List<Category> categories,*/ Integer price) {
+    public Event(Integer id, String name, String description, String status, Integer limit, Integer tickets_left, List<Venue> venueList, Date date, List<Category> categories, Integer price) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -24,7 +24,7 @@ public class Event {
         this.tickets_left = tickets_left;
         this.venueList = venueList;
         this.date = date;
-      //  this.categories = categories;
+        this.categories = categories;
         this.price = price;
     }
 

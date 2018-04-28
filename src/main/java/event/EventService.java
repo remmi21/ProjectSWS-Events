@@ -26,9 +26,11 @@ public class EventService {
                 while (cur.hasNext()) {
                     Event e;
                     List<Venue> venueList = new ArrayList<>();
+                    List<Category> cateList = new ArrayList<>();
 
                     Document doc = cur.next();
                     List<Document> venuesAsDocuments = (ArrayList)doc.get("Venues");
+                    List<Document> categoryAsDocuments = (ArrayList)doc.get("Categories");
 
                     for (Document venueAsDoc : venuesAsDocuments){
                         venueList.add(new Venue((Integer) venueAsDoc.get("id"),
@@ -39,8 +41,12 @@ public class EventService {
                                 (String)venueAsDoc.get("country"),
                                 (String)venueAsDoc.get("zip")));
                     }
+                    for (Document catAsDoc : categoryAsDocuments){
+                        cateList.add(new Category((Integer) catAsDoc.get("id"),
+                                (String)catAsDoc.get("name")));
+                    }
 
-                   e = new Event((Integer) doc.get("id"),
+                    events.put((Integer) doc.get("id"), new Event((Integer) doc.get("id"),
                             (String) doc.get("name"),
                             (String) doc.get("description"),
                             (String) doc.get("status"),
@@ -48,14 +54,14 @@ public class EventService {
                             (Integer) doc.get("tickets_left"),
                             venueList,
                             (Date) doc.get("date"),
-                            //  (Category)event.get("categories"),
-                            (Integer) doc.get("price"));
-                    events.put(e.getId(), e);
+                            cateList,
+                            (Integer) doc.get("price")));
                 }
             }
             Event e2= (Event)events.get(120);       //Testing
             System.out.println("Id: "+e2.getId());
             System.out.println("Place of venues: "+e2.getVenueList().get(0).getAddress());
+            System.out.println("Category: "+e2.getCategories().get(0).getName());
         } catch (MongoException e) {
                 e.printStackTrace();
         }
