@@ -10,21 +10,21 @@ public class Event {
     public String status;
     public Integer limit;
     public Integer tickets_left;
-    public Venue venue;
+    public List<Venue> venueList;
     public Date date;
     public List<Category> categories;
     public Integer price;
 
-    public Event(Integer id, String name, String description, String status, Integer limit, Integer tickets_left, Date date, Integer price) { //List<Category> categories
+    public Event(Integer id, String name, String description, String status, Integer limit, Integer tickets_left, List<Venue> venueList, Date date, /*List<Category> categories,*/ Integer price) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.status = status;
         this.limit = limit;
         this.tickets_left = tickets_left;
-        //this.venue = venue;
+        this.venueList = venueList;
         this.date = date;
-        //this.categories = categories;
+      //  this.categories = categories;
         this.price = price;
     }
 
@@ -76,13 +76,9 @@ public class Event {
         this.tickets_left = tickets_left;
     }
 
-    public Venue getVenue() {
-        return venue;
-    }
+    public List<Venue> getVenueList() { return venueList; }
 
-    public void setVenue(Venue venue) {
-        this.venue = venue;
-    }
+    public void setVenueList(List<Venue> venueList) { this.venueList = venueList; }
 
     public Date getDate() {
         return date;
