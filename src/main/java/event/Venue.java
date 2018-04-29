@@ -1,13 +1,13 @@
 package event;
 
 public class Venue {
-    public Integer id;
-    public String name;
-    public String address;
-    public String city;
-    public String state;
-    public String country;
-    public String zipcode;
+    private Integer id;
+    private String name;
+    private String address;
+    private String city;
+    private String state;
+    private String country;
+    private String zipcode;
 
     public Integer getId() {
         return id;
