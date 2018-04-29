@@ -10,11 +10,11 @@ public class Event {
     private Integer limit;
     private Integer tickets_left;
     private List<Venue> venueList;
-    private Date date;
+    private DateEv date;
     private List<Category> categories;
     private Integer price;
 
-    public Event(Integer id, String name, String description, String status, Integer limit, Integer tickets_left, List<Venue> venueList, Date date, List<Category> categories, Integer price) {
+    public Event(Integer id, String name, String description, String status, Integer limit, Integer tickets_left, List<Venue> venueList, DateEv date, List<Category> categories, Integer price) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -79,11 +79,11 @@ public class Event {
 
     public void setVenueList(List<Venue> venueList) { this.venueList = venueList; }
 
-    public Date getDate() {
+    public DateEv getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(DateEv date) {
         this.date = date;
     }
 

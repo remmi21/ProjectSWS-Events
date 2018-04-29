@@ -1,16 +1,15 @@
 package event;
 
-public class Date {
+import java.util.Date;
+
+public class DateEv {
     private Date event_start ;
     private Date event_end;
     private Date registration_start;
     private Date registration_end;
 
-    public Date(){
 
-    }
-
-    public Date(Date event_start, Date event_end, Date registration_start, Date registration_end) {
+    public DateEv(Date event_start, Date event_end, Date registration_start, Date registration_end) {
         this.event_start = event_start;
         this.event_end = event_end;
         this.registration_start = registration_start;

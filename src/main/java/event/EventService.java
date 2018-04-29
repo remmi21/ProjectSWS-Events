@@ -7,6 +7,9 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class EventService {
@@ -17,11 +20,12 @@ public class EventService {
     }
 
     public void loadMongoEvents(){
+        DateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             MongoClient mongoClient = new MongoClient("localhost", 27017);
             MongoDatabase database = mongoClient.getDatabase("EventsSWS");
             MongoCollection<Document> collection = database.getCollection("eventsCollection");
-            Date d=null;
+            DateEv d=null;
             try (MongoCursor<Document> cur = collection.find().iterator()) {
                 while (cur.hasNext()) {
                     List<Venue> venueList = new ArrayList<>();
@@ -33,10 +37,10 @@ public class EventService {
                     List<Document> dateAsDocuments= (ArrayList)doc.get("Datetimes") ;
 
                     for (Document dateAsDoc : dateAsDocuments){
-                        d=new Date((Date)dateAsDoc.get("event_start"),
-                                (Date)dateAsDoc.get("event_end"),
-                                (Date)dateAsDoc.get("registration_start"),
-                                (Date)dateAsDoc.get("registration_end"));
+                        d=new DateEv((Date)simpleDateFormat.parse((String)dateAsDoc.get("event_start")),
+                                (Date)simpleDateFormat.parse((String)dateAsDoc.get("event_end")),
+                                (Date)simpleDateFormat.parse((String)dateAsDoc.get("registration_start")),
+                                (Date)simpleDateFormat.parse((String)dateAsDoc.get("registration_end")));
                     }
 
                     for (Document venueAsDoc : venuesAsDocuments){
@@ -64,8 +68,10 @@ public class EventService {
                             cateList,
                             (Integer) doc.get("price")));
                 }
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
-           // Event e2= (Event)events.get(120);       //Testing
+            // Event e2= (Event)events.get(120);       //Testing
            // System.out.println("Id: "+e2.getId());
            // System.out.println("Place of venues: "+e2.getVenueList().get(0).getAddress());
            // System.out.println("Category: "+e2.getCategories().get(0).getName());
