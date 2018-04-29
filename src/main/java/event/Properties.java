@@ -1,26 +1,16 @@
 package event;
 
 public class Properties {
-    private Event event;
     private boolean group_registrations_allowed;
     private Integer groupe_size;
     private boolean active;
     private boolean members_only;
 
-    public Properties(Event event, boolean group_registrations_allowed, Integer groupe_size, boolean active, boolean members_only) {
-        this.event = event;
+    public Properties(boolean group_registrations_allowed, Integer groupe_size, boolean active, boolean members_only) {
         this.group_registrations_allowed = group_registrations_allowed;
         this.groupe_size = groupe_size;
         this.active = active;
         this.members_only = members_only;
-    }
-
-    public Event getEvent() {
-        return event;
-    }
-
-    public void setEvent(Event event) {
-        this.event = event;
     }
 
     public boolean isGroup_registrations_allowed() {

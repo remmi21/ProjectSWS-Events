@@ -28,6 +28,7 @@ public class EventService {
             MongoDatabase database = mongoClient.getDatabase("EventsSWS");
             MongoCollection<Document> collection = database.getCollection("eventsCollection");
             DateEv d=null;
+            Properties properties=null;
             try (MongoCursor<Document> cur = collection.find().iterator()) {
                 while (cur.hasNext()) {
                     List<Venue> venueList = new ArrayList<>();
@@ -68,8 +69,12 @@ public class EventService {
                         cateList.add(new Category((Integer) catAsDoc.get("id"),
                                 (String)catAsDoc.get("name")));
                     }
+                    properties=new Properties((Boolean) doc.get("group_registrations_allowed"),
+                            (Integer) doc.get("group_registrations_max"),
+                            (Boolean) doc.get("active"),
+                            (Boolean) doc.get("member_only"));
 
-                    events.put((Integer) doc.get("id"), new Event((Integer) doc.get("id"),
+                    Event e=new Event((Integer) doc.get("id"),
                             (String) doc.get("name"),
                             (String) doc.get("description"),
                             (String) doc.get("status"),
@@ -78,7 +83,10 @@ public class EventService {
                             venueList,
                             d,
                             cateList,
-                            priceList));
+                            priceList,
+                            properties);
+
+                    events.put((Integer) doc.get("id"),e);
                 }
             } catch (ParseException e) {
                 e.printStackTrace();

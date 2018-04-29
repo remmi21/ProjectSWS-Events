@@ -13,8 +13,10 @@ public class Event {
     private DateEv date;
     private List<Category> categories;
     private List<Pricing> price;
+    private Properties prop;
 
-    public Event(Integer id, String name, String description, String status, Integer limit, Integer tickets_left, List<Venue> venueList, DateEv date, List<Category> categories, List<Pricing> price) {
+    public Event(Integer id, String name, String description, String status, Integer limit, Integer tickets_left,
+                 List<Venue> venueList, DateEv date, List<Category> categories, List<Pricing> price, Properties prop) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -25,6 +27,7 @@ public class Event {
         this.date = date;
         this.categories = categories;
         this.price = price;
+        this.prop=prop;
     }
 
     public Integer getId() {
@@ -101,5 +104,13 @@ public class Event {
 
     public void setPrice(List<Pricing> price) {
         this.price = price;
+    }
+
+    public Properties getProp() {
+        return prop;
+    }
+
+    public void setProp(Properties prop) {
+        this.prop = prop;
     }
 }
