@@ -12,9 +12,9 @@ public class Event {
     private List<Venue> venueList;
     private DateEv date;
     private List<Category> categories;
-    private Integer price;
+    private List<Pricing> price;
 
-    public Event(Integer id, String name, String description, String status, Integer limit, Integer tickets_left, List<Venue> venueList, DateEv date, List<Category> categories, Integer price) {
+    public Event(Integer id, String name, String description, String status, Integer limit, Integer tickets_left, List<Venue> venueList, DateEv date, List<Category> categories, List<Pricing> price) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -95,11 +95,11 @@ public class Event {
         this.categories = categories;
     }
 
-    public Integer getPrice() {
+    public List<Pricing> getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(List<Pricing> price) {
         this.price = price;
     }
 }

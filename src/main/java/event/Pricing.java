@@ -1,14 +1,21 @@
 package event;
 
 public class Pricing {
+    private String name;
     private int normalPrice;
-    private int memberPrice;
 
-    public Pricing(int normalPrice, int memberPrice) {
+    public Pricing(String name, Integer normalPrice) {
         this.normalPrice = normalPrice;
-        this.memberPrice = memberPrice;
+        this.name=name;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
     public int getNormalPrice() {
         return normalPrice;
     }
@@ -17,11 +24,4 @@ public class Pricing {
         this.normalPrice = normalPrice;
     }
 
-    public int getMemberPrice() {
-        return memberPrice;
-    }
-
-    public void setMemberPrice(int memberPrice) {
-        this.memberPrice = memberPrice;
-    }
 }

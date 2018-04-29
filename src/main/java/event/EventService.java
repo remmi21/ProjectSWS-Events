@@ -32,11 +32,13 @@ public class EventService {
                 while (cur.hasNext()) {
                     List<Venue> venueList = new ArrayList<>();
                     List<Category> cateList = new ArrayList<>();
+                    List<Pricing> priceList = new ArrayList<>();
 
                     Document doc = cur.next();
                     List<Document> venuesAsDocuments = (ArrayList)doc.get("Venues");
                     List<Document> categoryAsDocuments = (ArrayList)doc.get("Categories");
                     List<Document> dateAsDocuments= (ArrayList)doc.get("Datetimes") ;
+                    List<Document> priceAsDocuments= (ArrayList)doc.get("Prices") ;
 
 
                     for (Document dateAsDoc : dateAsDocuments){
@@ -57,6 +59,11 @@ public class EventService {
                                 (String)venueAsDoc.get("country"),
                                 (String)venueAsDoc.get("zip")));
                     }
+
+                    for (Document pricesAsDoc : priceAsDocuments){
+                        priceList.add(new Pricing((String)pricesAsDoc.get("name"),
+                                (Integer) pricesAsDoc.get("amount")));
+                    }
                     for (Document catAsDoc : categoryAsDocuments){
                         cateList.add(new Category((Integer) catAsDoc.get("id"),
                                 (String)catAsDoc.get("name")));
@@ -71,7 +78,7 @@ public class EventService {
                             venueList,
                             d,
                             cateList,
-                            (Integer) doc.get("price")));
+                            priceList));
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
