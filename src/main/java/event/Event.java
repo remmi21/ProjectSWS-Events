@@ -1,19 +1,18 @@
 package event;
 
-import java.util.Date;
 import java.util.List;
 
 public class Event {
-    public Integer id;
-    public String name;
-    public String description;
-    public String status;
-    public Integer limit;
-    public Integer tickets_left;
-    public List<Venue> venueList;
-    public Date date;
-    public List<Category> categories;
-    public Integer price;
+    private Integer id;
+    private String name;
+    private String description;
+    private String status;
+    private Integer limit;
+    private Integer tickets_left;
+    private List<Venue> venueList;
+    private Date date;
+    private List<Category> categories;
+    private Integer price;
 
     public Event(Integer id, String name, String description, String status, Integer limit, Integer tickets_left, List<Venue> venueList, Date date, List<Category> categories, Integer price) {
         this.id = id;
