@@ -58,10 +58,10 @@ public class EventService {
                             (Integer) doc.get("price")));
                 }
             }
-            Event e2= (Event)events.get(120);       //Testing
-            System.out.println("Id: "+e2.getId());
-            System.out.println("Place of venues: "+e2.getVenueList().get(0).getAddress());
-            System.out.println("Category: "+e2.getCategories().get(0).getName());
+           // Event e2= (Event)events.get(120);       //Testing
+           // System.out.println("Id: "+e2.getId());
+           // System.out.println("Place of venues: "+e2.getVenueList().get(0).getAddress());
+           // System.out.println("Category: "+e2.getCategories().get(0).getName());
         } catch (MongoException e) {
                 e.printStackTrace();
         }
