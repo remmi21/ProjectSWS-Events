@@ -15,8 +15,27 @@ import java.util.*;
 public class EventService {
     public static Map events = new HashMap();
 
+    public EventService(){
+
+    }
+
     public Event findById(String id) {
         return (Event) events.get(id);
+    }
+
+    public Event add(Integer id, String name, String description, String status, Integer limit, Integer tickets_left,
+                     List<Venue> venueList, DateEv date, List<Category> categories, List<Pricing> price, Properties prop) {
+        Event event = new Event(id,name,description,status,limit,tickets_left,venueList,date,categories,price,prop);
+        events.put(id.toString(), event);
+        return event;
+    }
+
+    public void delete(String id) {
+            events.remove(id);
+    }
+
+    public List findAll() {
+        return new ArrayList<>(events.values());
     }
 
     public void loadMongoEvents(){
