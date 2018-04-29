@@ -21,6 +21,8 @@ public class EventService {
 
     public void loadMongoEvents(){
         DateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Integer ticketLeft=0;
+        Integer ticketLimit=0;
         try {
             MongoClient mongoClient = new MongoClient("localhost", 27017);
             MongoDatabase database = mongoClient.getDatabase("EventsSWS");
@@ -36,11 +38,14 @@ public class EventService {
                     List<Document> categoryAsDocuments = (ArrayList)doc.get("Categories");
                     List<Document> dateAsDocuments= (ArrayList)doc.get("Datetimes") ;
 
+
                     for (Document dateAsDoc : dateAsDocuments){
                         d=new DateEv((Date)simpleDateFormat.parse((String)dateAsDoc.get("event_start")),
                                 (Date)simpleDateFormat.parse((String)dateAsDoc.get("event_end")),
                                 (Date)simpleDateFormat.parse((String)dateAsDoc.get("registration_start")),
                                 (Date)simpleDateFormat.parse((String)dateAsDoc.get("registration_end")));
+                        ticketLeft=(Integer)dateAsDoc.get("tickets_left");
+                        ticketLimit=(Integer)dateAsDoc.get("limit");
                     }
 
                     for (Document venueAsDoc : venuesAsDocuments){
@@ -61,8 +66,8 @@ public class EventService {
                             (String) doc.get("name"),
                             (String) doc.get("description"),
                             (String) doc.get("status"),
-                            (Integer) doc.get("limit"),
-                            (Integer) doc.get("tickets_left"),
+                            ticketLimit,
+                            ticketLeft,
                             venueList,
                             d,
                             cateList,
