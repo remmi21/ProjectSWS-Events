@@ -13,28 +13,29 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class EventService {
-    public static Map events = new HashMap();
+    public static Map<Integer, Event> events = new HashMap();
+    public static List<Venue> venueList = new ArrayList<>();
 
     public EventService(){
 
     }
 
-    public Event findById(String id) {
+    public static Event findById(Integer id) {
         return (Event) events.get(id);
     }
 
-    public Event add(Integer id, String name, String description, String status, Integer limit, Integer tickets_left,
+    public static Event add(Integer id, String name, String description, String status, Integer limit, Integer tickets_left,
                      List<Venue> venueList, DateEv date, List<Category> categories, List<Pricing> price, Properties prop) {
         Event event = new Event(id,name,description,status,limit,tickets_left,venueList,date,categories,price,prop);
-        events.put(id.toString(), event);
+        events.put(id, event);
         return event;
     }
 
-    public void delete(String id) {
+    public static void delete(String id) {
             events.remove(id);
     }
 
-    public List findAll() {
+    public static List findAll() {
         return new ArrayList<>(events.values());
     }
 
@@ -50,7 +51,6 @@ public class EventService {
             Properties properties=null;
             try (MongoCursor<Document> cur = collection.find().iterator()) {
                 while (cur.hasNext()) {
-                    List<Venue> venueList = new ArrayList<>();
                     List<Category> cateList = new ArrayList<>();
                     List<Pricing> priceList = new ArrayList<>();
 

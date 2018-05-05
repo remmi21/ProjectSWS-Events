@@ -3,48 +3,51 @@ package event;
 import java.util.Date;
 
 public class DateEv {
-    private Date event_start ;
-    private Date event_end;
-    private Date registration_start;
-    private Date registration_end;
+    private Date eventStart ;
+    private Date eventEnd;
+    private Date registrationStart;
+    private Date registrationEnd;
 
+    public DateEv() {
 
-    public DateEv(Date event_start, Date event_end, Date registration_start, Date registration_end) {
-        this.event_start = event_start;
-        this.event_end = event_end;
-        this.registration_start = registration_start;
-        this.registration_end = registration_end;
     }
 
-    public Date getEvent_start() {
-        return event_start;
+    public DateEv(Date eventStart, Date eventEnd, Date registrationStart, Date registrationEnd) {
+        this.eventStart = eventStart;
+        this.eventEnd = eventEnd;
+        this.registrationStart = registrationStart;
+        this.registrationEnd = registrationEnd;
     }
 
-    public void setEvent_start(Date event_start) {
-        this.event_start = event_start;
+    public Date getEventStart() {
+        return eventStart;
     }
 
-    public Date getEvent_end() {
-        return event_end;
+    public void setEventStart(Date eventStart) {
+        this.eventStart = eventStart;
     }
 
-    public void setEvent_end(Date event_end) {
-        this.event_end = event_end;
+    public Date getEventEnd() {
+        return eventEnd;
     }
 
-    public Date getRegistration_start() {
-        return registration_start;
+    public void setEventEnd(Date eventEnd) {
+        this.eventEnd = eventEnd;
     }
 
-    public void setRegistration_start(Date registration_start) {
-        this.registration_start = registration_start;
+    public Date getRegistrationStart() {
+        return registrationStart;
     }
 
-    public Date getRegistration_end() {
-        return registration_end;
+    public void setRegistrationStart(Date registrationStart) {
+        this.registrationStart = registrationStart;
     }
 
-    public void setRegistration_end(Date registration_end) {
-        this.registration_end = registration_end;
+    public Date getRegistrationEnd() {
+        return registrationEnd;
+    }
+
+    public void setRegistrationEnd(Date registrationEnd) {
+        this.registrationEnd = registrationEnd;
     }
 }

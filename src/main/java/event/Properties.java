@@ -6,6 +6,10 @@ public class Properties {
     private boolean active;
     private boolean members_only;
 
+    public Properties() {
+
+    }
+
     public Properties(boolean group_registrations_allowed, Integer groupe_size, boolean active, boolean members_only) {
         this.group_registrations_allowed = group_registrations_allowed;
         this.groupe_size = groupe_size;

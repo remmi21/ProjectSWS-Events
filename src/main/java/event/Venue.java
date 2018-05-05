@@ -9,6 +9,16 @@ public class Venue {
     private String country;
     private String zipcode;
 
+    public Venue(Integer id, String name, String address, String city, String state, String country, String zipcode) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.city = city;
+        this.state = state;
+        this.country = country;
+        this.zipcode = zipcode;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -62,16 +72,6 @@ public class Venue {
     }
 
     public void setZipcode(String zipcode) {
-        this.zipcode = zipcode;
-    }
-
-    public Venue(Integer id, String name, String address, String city, String state, String country, String zipcode) {
-        this.id = id;
-        this.name = name;
-        this.address = address;
-        this.city = city;
-        this.state = state;
-        this.country = country;
         this.zipcode = zipcode;
     }
 }
