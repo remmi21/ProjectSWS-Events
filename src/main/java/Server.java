@@ -84,21 +84,26 @@ public class Server {
 
         /** Venues */
 
-        // POST - add venue
-        post("/events/venue/add", (request, response) -> {
-            String id = request.queryParams("id");
-            String name = request.queryParams("name");
-            String address = request.queryParams("address");
-            String city = request.queryParams("city");
-            String state = request.queryParams("state");
-            String country = request.queryParams("country");
-            String zipcode = request.queryParams("zipcode");
+        // PUT - add venue
+        put("/events/venue/add/:id", (request, response) -> {
+            String id = request.params(":id");
+            Event event = eventService.findById(Integer.parseInt(id));
 
-            Venue venue = VenueService.add(Integer.parseInt(id), name, address, city, state, country, zipcode);
+            if(event != null) {
+                String name = request.queryParams("name");
+                String address = request.queryParams("address");
+                String city = request.queryParams("city");
+                String state = request.queryParams("state");
+                String country = request.queryParams("country");
+                String zipcode = request.queryParams("zipcode");
 
-            response.status(201); // 201 created
+                Venue venue = VenueService.add(Integer.parseInt(id), name, address, city, state, country, zipcode);
 
-            return om.writeValueAsString(venue);
+                return om.writeValueAsString("added venue " + venue + "to event with id " + id);
+            } else {
+                response.status(404);
+                return om.writeValueAsString("event not found");
+            }
         });
 
         // GET - venue by id
@@ -114,25 +119,30 @@ public class Server {
 
         /** Dates */
 
-        // POST - add date to event
-        post("/events/date/add", (request, response) -> {
-            String id = request.queryParams("id");
-            String eventStart = request.queryParams("eventStart");
-            String eventEnd = request.queryParams("eventEnd");
-            String registrationStart = request.queryParams("registrationStart");
-            String registrationEnd = request.queryParams("registationEnd");
+        // PUT - add date to event
+        put("/events/date/add/:id", (request, response) -> {
+            String id = request.params(":id");
+            Event event = eventService.findById(Integer.parseInt(id));
 
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date resultingEventStartDate = df.parse(eventStart);
-            Date resultingEventEndDate = df.parse(eventEnd);
-            Date resultingRegistrationStartDate = df.parse(registrationStart);
-            Date resultingRegistrationEndDate = df.parse(registrationEnd);
+            if(event != null) {
+                String eventStart = request.queryParams("eventStart");
+                String eventEnd = request.queryParams("eventEnd");
+                String registrationStart = request.queryParams("registrationStart");
+                String registrationEnd = request.queryParams("registationEnd");
 
-            Event event = DateEvService.addDate(Integer.parseInt(id), resultingEventStartDate, resultingEventEndDate, resultingRegistrationStartDate, resultingRegistrationEndDate);
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date resultingEventStartDate = df.parse(eventStart);
+                Date resultingEventEndDate = df.parse(eventEnd);
+                Date resultingRegistrationStartDate = df.parse(registrationStart);
+                Date resultingRegistrationEndDate = df.parse(registrationEnd);
 
-            response.status(201); // 201 created
+                DateEvService.addDate(Integer.parseInt(id), resultingEventStartDate, resultingEventEndDate, resultingRegistrationStartDate, resultingRegistrationEndDate);
 
-            return om.writeValueAsString(event);
+                return om.writeValueAsString("dates successfully added to event with id " + id);
+            } else {
+                response.status(404);
+                return om.writeValueAsString("event not found");
+            }
         });
 
         // GET - search event by date
@@ -145,6 +155,40 @@ public class Server {
             } else {
                 response.status(404); // 404 not found
                 return om.writeValueAsString("event not found");
+            }
+        });
+
+        /** Pricing */
+
+        // PUT - add price to event
+        put("/events/pricing/add/:id", (request, response) -> {
+            String id = request.params(":id");
+            Event event = eventService.findById(Integer.parseInt(id));
+
+            if(event != null) {
+                String name = request.queryParams("name");
+                String priceValue = request.queryParams("priceValue");
+
+                PricingService.addPrice(Integer.parseInt(id), name, Integer.parseInt(priceValue));
+
+                return om.writeValueAsString("price successfully added to event with id " + id);
+            } else {
+                response.status(404);
+                return om.writeValueAsString("event not found");
+            }
+        });
+
+        // GET - get price of event
+        get("/events/pricing/get/:id", (request, response) -> {
+            String id = request.params(":id");
+
+            List<Pricing> eventPrices = PricingService.findEventPrice(Integer.parseInt(id));
+
+            if(!eventPrices.isEmpty()) {
+                return om.writeValueAsString(eventPrices);
+            } else {
+                response.status(404);
+                return om.writeValueAsString("no prices found for the given event");
             }
         });
     }

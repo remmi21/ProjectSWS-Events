@@ -102,8 +102,8 @@ public class Event {
         return price;
     }
 
-    public void setPrice(List<Pricing> price) {
-        this.price = price;
+    public void setPrice(Pricing price) {
+        this.price.add(price);
     }
 
     public Properties getProp() {
