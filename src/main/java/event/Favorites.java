@@ -4,11 +4,9 @@ import java.util.List;
 
 public class Favorites {
     private List<Event> favorites;
-    private User user;
 
-    public Favorites(List<Event> favorites, User user) {
+    public Favorites(List<Event> favorites) {
         this.favorites = favorites;
-        this.user = user;
     }
 
     public List<Event> getFavorites() {
@@ -17,13 +15,5 @@ public class Favorites {
 
     public void setFavorites(List<Event> favorites) {
         this.favorites = favorites;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 }

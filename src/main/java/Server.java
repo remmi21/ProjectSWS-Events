@@ -71,7 +71,7 @@ public class Server {
         });
 
         // GET - find event by id
-        get("/events/search/:id", (request, response) -> {
+        get(":id", (request, response) -> {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
             if(event != null) {
@@ -157,6 +157,124 @@ public class Server {
                 return om.writeValueAsString("event not found");
             }
         });
+
+        /**Properties*/
+        //modify the properties
+        put("/events/properties/add/:id",(request, response)-> {
+            String id = request.params(":id");
+            Event event = eventService.findById(Integer.parseInt(id));
+            PropertiesService prop = new PropertiesService();
+            if (event != null) {
+                String groups_allowed = request.queryParams("group_registrations_allowed");
+                String groupsize = request.queryParams("group_size");
+                String active = request.queryParams("active");
+                String member = request.queryParams("members_only");
+
+                prop.add(event.getId(), Boolean.parseBoolean(groups_allowed), Integer.parseInt(groupsize),
+                        Boolean.parseBoolean(active), Boolean.parseBoolean(member));
+                return om.writeValueAsString("properties successfully added to event with id " + id);
+            }else {
+                response.status(404);
+                return om.writeValueAsString("event not found");
+            }
+        });
+        //remove the properties
+        get("/events/properties/remove/:id",(request, response)-> {
+            String id = request.params(":id");
+            Event event = eventService.findById(Integer.parseInt(id));
+            PropertiesService prop = new PropertiesService();
+            if (event != null) {
+                prop.remove(event.getId());
+                return om.writeValueAsString("properties successfully removed from to event with id " + id);
+            }else {
+                response.status(404);
+                return om.writeValueAsString("event not found");
+            }
+        });
+
+        //search all events with properties
+        put("/events/properties/search",(request, response)-> {
+            PropertiesService prop = new PropertiesService();
+            String groups_allowed = request.queryParams("group_registrations_allowed");
+            String groupsize = request.queryParams("group_size");
+            String active = request.queryParams("active");
+            String member = request.queryParams("members_only");
+
+            List allEvents = prop.searchEventbyProp(Boolean.parseBoolean(groups_allowed), Integer.parseInt(groupsize),
+                        Boolean.parseBoolean(active), Boolean.parseBoolean(member));
+            if(allEvents.isEmpty()) {
+                return om.writeValueAsString("no events found");
+            } else {
+                return om.writeValueAsString(allEvents);
+            }
+        });
+
+        /**Categories*/
+        put("/events/category/add",(request, response)-> {
+            CategoryService cat = new CategoryService();
+            String id = request.queryParams("id");
+            String name = request.queryParams("name");
+            cat.add(Integer.parseInt(id),name);
+
+            return om.writeValueAsString("category successfully add");
+        });
+
+        put("/events/category/addto/:id",(request, response)-> {
+            String eid = request.params(":id");
+            Event event = eventService.findById(Integer.parseInt(eid));
+            CategoryService cat = new CategoryService();
+            String id = request.queryParams("id");
+            String name = request.queryParams("name");
+            cat.addTo(Integer.parseInt(eid),Integer.parseInt(id),name);
+
+            return om.writeValueAsString("category successfully add to event with id "+id);
+        });
+
+        get("/events/category/find/:id",(request, response)-> {
+            String id = request.params(":id");
+            CategoryService cat=new CategoryService();
+            Category cate=cat.findById(Integer.parseInt(id));
+            if (cate != null) {
+                return om.writeValueAsString(cate);
+            } else {
+                response.status(404); // 404 not found
+                return om.writeValueAsString("category not found");
+            }
+        });
+
+        get("/events/category/remove/:id",(request, response)-> {
+            String id = request.params(":id");
+            CategoryService cat=new CategoryService();
+            Category cate=cat.remove(Integer.parseInt(id));
+            if (cate != null) {
+                return om.writeValueAsString("Category was successfully removed");
+            } else {
+                response.status(404); // 404 not found
+                return om.writeValueAsString("venue not found");
+            }
+        });
+        // GET - get category list
+        get("/events/categories/list", (requet, response) -> {
+            CategoryService cate =new CategoryService();
+            List allCats = cate.findAll();
+            if(allCats.isEmpty()) {
+                return om.writeValueAsString("no events found");
+            } else {
+                return om.writeValueAsString(allCats);
+            }
+        });
+
+        /** Favorites */
+        get("/events/fav/list", (requet, response) -> {
+            FavoritesService fav =new FavoritesService();
+            List allFav = fav.getFavorites();
+            if(allFav.isEmpty()) {
+                return om.writeValueAsString("no events found");
+            } else {
+                return om.writeValueAsString(allFav);
+            }
+        });
+
 
         /** Pricing */
 
