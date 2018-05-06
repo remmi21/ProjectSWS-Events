@@ -14,7 +14,8 @@ import java.util.*;
 
 public class EventService {
     public static Map<Integer, Event> events = new HashMap();
-    public static List<Venue> venueList = new ArrayList<>();
+    public static Map<Integer,Venue> venueList = new HashMap();
+    public static Map<Integer,Category> catList = new HashMap();
 
     public EventService(){
 
@@ -53,6 +54,7 @@ public class EventService {
                 while (cur.hasNext()) {
                     List<Category> cateList = new ArrayList<>();
                     List<Pricing> priceList = new ArrayList<>();
+                    List<Venue> venuesList = new ArrayList<>();
 
                     Document doc = cur.next();
                     List<Document> venuesAsDocuments = (ArrayList)doc.get("Venues");
@@ -71,7 +73,14 @@ public class EventService {
                     }
 
                     for (Document venueAsDoc : venuesAsDocuments){
-                        venueList.add(new Venue((Integer) venueAsDoc.get("id"),
+                        venuesList.add(new Venue((Integer) venueAsDoc.get("id"),
+                                (String)venueAsDoc.get("name"),
+                                (String)venueAsDoc.get("address"),
+                                (String)venueAsDoc.get("city"),
+                                (String)venueAsDoc.get("state"),
+                                (String)venueAsDoc.get("country"),
+                                (String)venueAsDoc.get("zip")));
+                        venueList.put((Integer) venueAsDoc.get("id"),new Venue((Integer) venueAsDoc.get("id"),
                                 (String)venueAsDoc.get("name"),
                                 (String)venueAsDoc.get("address"),
                                 (String)venueAsDoc.get("city"),
@@ -87,6 +96,8 @@ public class EventService {
                     for (Document catAsDoc : categoryAsDocuments){
                         cateList.add(new Category((Integer) catAsDoc.get("id"),
                                 (String)catAsDoc.get("name")));
+                        catList.put((Integer) catAsDoc.get("id"),new Category((Integer) catAsDoc.get("id"),
+                                (String)catAsDoc.get("name")));
                     }
                     properties=new Properties((Boolean) doc.get("group_registrations_allowed"),
                             (Integer) doc.get("group_registrations_max"),
@@ -99,7 +110,7 @@ public class EventService {
                             (String) doc.get("status"),
                             ticketLimit,
                             ticketLeft,
-                            venueList,
+                            venuesList,
                             d,
                             cateList,
                             priceList,

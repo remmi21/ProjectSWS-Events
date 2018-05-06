@@ -10,28 +10,24 @@ public class VenueService {
         EventService eventService = new EventService();
 
         Venue newVenue = new Venue(id, name, address, city, state, country, zipcode);
-        eventService.venueList.add(newVenue);
+        eventService.venueList.put(id,newVenue);
 
         return newVenue;
     }
 
     public static Venue findById(Integer id) {
         EventService eventService = new EventService();
-
-        for(int i=0; i<eventService.venueList.size(); i++) {
-            Venue searchedVenue = eventService.venueList.get(i);
-            if (searchedVenue.getId() == id) {
-                return searchedVenue;
-            }
+        Venue searchedVenue;
+        if((searchedVenue=eventService.venueList.get(id))!=null) {
+            return searchedVenue;
         }
-
         return null;
     }
 
-    public List<Venue> findAll() {
+    public List findAll() {
         EventService eventService = new EventService();
 
-        return eventService.venueList;
+        return new ArrayList<>(eventService.venueList.values());
     }
 
 }
