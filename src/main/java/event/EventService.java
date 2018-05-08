@@ -16,6 +16,7 @@ public class EventService {
     public static Map<Integer, Event> events = new HashMap();
     public static Map<Integer,Venue> venueList = new HashMap();
     public static Map<Integer,Category> catList = new HashMap();
+    public static Map<Integer,Location> locationList = new HashMap();
 
     public EventService(){
 
@@ -44,6 +45,7 @@ public class EventService {
         DateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Integer ticketLeft=0;
         Integer ticketLimit=0;
+        Integer loc_count=0;
         try {
             MongoClient mongoClient = new MongoClient("localhost", 27017);
             MongoDatabase database = mongoClient.getDatabase("EventsSWS");
@@ -73,20 +75,17 @@ public class EventService {
                     }
 
                     for (Document venueAsDoc : venuesAsDocuments){
+                        Location loc=new Location((String)venueAsDoc.get("address"),
+                                (String)venueAsDoc.get("city"),
+                                (String)venueAsDoc.get("state"),
+                                (String)venueAsDoc.get("country"),
+                                (String)venueAsDoc.get("zip"));
+                        locationList.put(loc_count,loc);
+                        loc_count++;
                         venuesList.add(new Venue((Integer) venueAsDoc.get("id"),
-                                (String)venueAsDoc.get("name"),
-                                (String)venueAsDoc.get("address"),
-                                (String)venueAsDoc.get("city"),
-                                (String)venueAsDoc.get("state"),
-                                (String)venueAsDoc.get("country"),
-                                (String)venueAsDoc.get("zip")));
+                                (String)venueAsDoc.get("name"),loc));
                         venueList.put((Integer) venueAsDoc.get("id"),new Venue((Integer) venueAsDoc.get("id"),
-                                (String)venueAsDoc.get("name"),
-                                (String)venueAsDoc.get("address"),
-                                (String)venueAsDoc.get("city"),
-                                (String)venueAsDoc.get("state"),
-                                (String)venueAsDoc.get("country"),
-                                (String)venueAsDoc.get("zip")));
+                                (String)venueAsDoc.get("name"),loc));
                     }
 
                     for (Document pricesAsDoc : priceAsDocuments){

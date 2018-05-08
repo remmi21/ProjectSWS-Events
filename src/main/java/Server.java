@@ -96,8 +96,8 @@ public class Server {
                 String state = request.queryParams("state");
                 String country = request.queryParams("country");
                 String zipcode = request.queryParams("zipcode");
-
-                Venue venue = VenueService.add(Integer.parseInt(id), name, address, city, state, country, zipcode);
+                Location loc= new Location(address,city,state,country, zipcode);
+                Venue venue = VenueService.add(Integer.parseInt(id), name,loc);
 
                 return om.writeValueAsString("added venue " + venue + "to event with id " + id);
             } else {

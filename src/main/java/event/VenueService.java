@@ -6,10 +6,10 @@ public class VenueService {
 
     public static Map<Integer, Venue> venues = new HashMap<>();
 
-    public static Venue add(Integer id, String name, String address, String city, String state, String country, String zipcode) {
+    public static Venue add(Integer id, String name,Location loc) {
         EventService eventService = new EventService();
 
-        Venue newVenue = new Venue(id, name, address, city, state, country, zipcode);
+        Venue newVenue = new Venue(id, name, loc);
         eventService.venueList.put(id,newVenue);
 
         return newVenue;
