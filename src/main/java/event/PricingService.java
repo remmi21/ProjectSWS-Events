@@ -18,4 +18,10 @@ public class PricingService {
 
         return eventPrices;
     }
+    public static void removePrice(Integer eventId, String name) {      //set price to 0
+        Pricing newPrice = new Pricing(name, 0);
+        Event event = EventService.findById(eventId);
+
+        event.setPrice(newPrice);
+    }
 }
