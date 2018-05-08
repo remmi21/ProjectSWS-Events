@@ -18,9 +18,13 @@ public class EventService {
     public static Map<Integer,Category> catList = new HashMap();
     public static Map<Integer,Location> locationList = new HashMap();
     public static Integer loc_count;
+    public static Map<Integer,User> userList=new HashMap<>();
 
     public EventService(){
-
+        User julia = new User("Julia","Wanker",23,7343);
+        User ramona = new User("Ramona","Huber",23,7344);
+        userList.put(julia.getId(),julia);
+        userList.put(ramona.getId(),ramona);
     }
 
     public static Event findById(Integer id) {
