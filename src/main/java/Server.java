@@ -264,6 +264,66 @@ public class Server {
             }
         });
 
+        /** Locations */
+        put("/events/location/add",(request, response)-> {
+            LocationService locS = new LocationService();
+            String address = request.queryParams("address");
+            String city = request.queryParams("city");
+            String state = request.queryParams("state");
+            String country = request.queryParams("country");
+            String zipcode = request.queryParams("zipcode");
+            locS.add(address,city,state,country,zipcode);
+
+            return om.writeValueAsString("location successfully add");
+        });
+
+        put("/events/location/addto/:id",(request, response)-> {
+            String eid = request.params(":id");
+            Event event = eventService.findById(Integer.parseInt(eid));
+            LocationService locS = new LocationService();
+            String address = request.queryParams("address");
+            String city = request.queryParams("city");
+            String state = request.queryParams("state");
+            String country = request.queryParams("country");
+            String zipcode = request.queryParams("zipcode");
+            locS.addTo(Integer.parseInt(eid),address,city,state,country,zipcode);
+
+            return om.writeValueAsString("category successfully add to event with id "+eid);
+        });
+
+        get("/events/location/find/:zip",(request, response)-> {
+            String zip = request.params(":zip");
+            LocationService locS=new LocationService();
+            ArrayList<Location> loc=locS.findByZip(zip);
+            if (loc != null) {
+                return om.writeValueAsString(loc);
+            } else {
+                response.status(404); // 404 not found
+                return om.writeValueAsString("no location with zip "+ zip +" not found");
+            }
+        });
+
+        get("/events/location/remove/:id",(request, response)-> {
+            String id = request.params(":id");
+            LocationService locS=new LocationService();
+            Location loc=locS.remove(Integer.parseInt(id));
+            if (loc != null) {
+                return om.writeValueAsString("Location was successfully removed");
+            } else {
+                response.status(404); // 404 not found
+                return om.writeValueAsString("Location not found");
+            }
+        });
+        // GET - get category list
+        get("/events/location/list", (requet, response) -> {
+            LocationService locS =new LocationService();
+            List allLocs = locS.findAll();
+            if(allLocs.isEmpty()) {
+                return om.writeValueAsString("no locations found");
+            } else {
+                return om.writeValueAsString(allLocs);
+            }
+        });
         /** Favorites */
         get("/events/fav/list", (requet, response) -> {
             FavoritesService fav =new FavoritesService();

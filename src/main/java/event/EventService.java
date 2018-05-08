@@ -17,6 +17,7 @@ public class EventService {
     public static Map<Integer,Venue> venueList = new HashMap();
     public static Map<Integer,Category> catList = new HashMap();
     public static Map<Integer,Location> locationList = new HashMap();
+    public static Integer loc_count;
 
     public EventService(){
 
@@ -45,7 +46,7 @@ public class EventService {
         DateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Integer ticketLeft=0;
         Integer ticketLimit=0;
-        Integer loc_count=0;
+        loc_count=0;
         try {
             MongoClient mongoClient = new MongoClient("localhost", 27017);
             MongoDatabase database = mongoClient.getDatabase("EventsSWS");
