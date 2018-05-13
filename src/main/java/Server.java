@@ -146,10 +146,10 @@ public class Server {
         });
 
         // GET - search event by date
-        get("/events/venue/search/:start", (request, response) -> {
+        get("/events/venues/search/:start", (request, response) -> {
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date resultingEventStartDate = df.parse(request.params(":start"));
-            Event event = DateEvService.searchEventsByDate(resultingEventStartDate);
+            ArrayList event = DateEvService.searchEventsByDate(resultingEventStartDate);
             if (event != null) {
                 return om.writeValueAsString(event);
             } else {

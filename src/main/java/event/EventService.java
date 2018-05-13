@@ -107,7 +107,6 @@ public class EventService {
                             (Integer) doc.get("group_registrations_max"),
                             (Boolean) doc.get("active"),
                             (Boolean) doc.get("member_only"));
-
                     Event e=new Event((Integer) doc.get("id"),
                             (String) doc.get("name"),
                             (String) doc.get("description"),

@@ -19,7 +19,7 @@ public class DateEv {
         this.registrationEnd = registrationEnd;
     }
 
-    public Date getEventStart() {
+    public Date getEventStart()  {
         return eventStart;
     }
 

@@ -1,6 +1,7 @@
 package event;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class DateEvService {
 
@@ -11,13 +12,17 @@ public class DateEvService {
         event.setDate(date);
     }
 
-    public static Event searchEventsByDate(Date startDate) {
-        for(int i=0; i<EventService.events.size(); i++) {
-            if(EventService.events.get(i).getDate().getEventStart() == startDate) {
-                return EventService.events.get(i);
+    public static ArrayList<Event> searchEventsByDate(Date startDate) {
+        ArrayList<Event>e= new ArrayList<>(EventService.events.values());
+        ArrayList<Event>result=new ArrayList<>();
+        for(int i=0; i<e.size(); i++) {
+            if(e.get(i).getDate().getEventStart().compareTo(startDate)==0) {
+                result.add( e.get(i));
             }
         }
-
+        if(result.size()>0){
+            return result;
+        }
         return null;
     }
 }
