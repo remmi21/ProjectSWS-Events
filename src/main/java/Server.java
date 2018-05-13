@@ -295,7 +295,7 @@ public class Server {
             String zip = request.params(":zip");
             LocationService locS=new LocationService();
             ArrayList<Location> loc=locS.findByZip(zip);
-            if (loc != null) {
+            if (loc.size()>0) {
                 return om.writeValueAsString(loc);
             } else {
                 response.status(404); // 404 not found

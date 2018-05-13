@@ -29,11 +29,11 @@ public class LocationService {
 
     public static ArrayList<Location> findByZip(String zip) {
         EventService eventService = new EventService();
-        ArrayList<Location> result=null;
+        ArrayList<Location> result=new ArrayList<>();
         Map<Integer,Location> locs= new HashMap();
         locs= eventService.locationList;
         for (Location l : locs.values()){
-            if(l.getZipcode().equals(zip)){
+            if(l.getZipcode().equals(zip)==true){
                 result.add(l);
             }
         }
