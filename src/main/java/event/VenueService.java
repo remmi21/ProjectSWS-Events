@@ -8,10 +8,13 @@ public class VenueService {
 
     public static Venue add(Integer id, String name,Location loc) {
         EventService eventService = new EventService();
-
+        Event e= eventService.events.get(id);
         Venue newVenue = new Venue(id, name, loc);
         eventService.venueList.put(id,newVenue);
-
+        List<Venue> list=e.getVenueList();
+        list.add(newVenue);
+        e.setVenueList(list);;
+        eventService.events.replace(e.getId(),e);
         return newVenue;
     }
 

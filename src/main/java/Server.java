@@ -84,7 +84,7 @@ public class Server {
 
         /** Venues */
 
-        // PUT - add venue
+        // PUT - add venue to event
         put("/events/venue/add/:id", (request, response) -> {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
