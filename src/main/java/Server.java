@@ -88,6 +88,10 @@ public class Server {
         });
 
         /***************************************************** Venues *****************************************************/
+        // TODO: delete venue
+        // TODO: return all venues
+
+        // TODO: check where location add function takes venue from -> venue is in event list but is not found when adding location (404)
 
         // PUT - add venue to event
         put("/events/venue/add/:id", (request, response) -> {
@@ -95,6 +99,7 @@ public class Server {
             Event event = eventService.findById(Integer.parseInt(id));
 
             if(event != null) {
+                String venueId = request.queryParams("venueId");
                 String name = request.queryParams("name");
                 String address = request.queryParams("address");
                 String city = request.queryParams("city");
@@ -102,9 +107,15 @@ public class Server {
                 String country = request.queryParams("country");
                 String zipcode = request.queryParams("zipcode");
                 Location loc= new Location(address,city,state,country, zipcode);
-                Venue venue = VenueService.add(Integer.parseInt(id), name,loc); // TODO: venue id is set to event id here
 
-                return om.writeValueAsString("added venue " + venue + " to event with id " + id);
+                Venue venue = VenueService.add(Integer.parseInt(id), Integer.parseInt(venueId), name,loc);
+
+                if(venue != null) {
+                    return om.writeValueAsString("added venue " + venue + " to event with id " + id);
+                } else {
+                    response.status(500);
+                    return om.writeValueAsString("venue could not be added");
+                }
             } else {
                 response.status(404);
                 return om.writeValueAsString("event not found");
@@ -123,6 +134,7 @@ public class Server {
         });
 
         /***************************************************** Dates *****************************************************/
+        // TODO: delete dates
 
         // PUT - add date to event
         put("/events/date/add/:id", (request, response) -> {
@@ -163,9 +175,8 @@ public class Server {
             }
         });
 
-        // TODO: test from here on
         /***************************************************** Properties *****************************************************/
-        //modify the properties
+        //PUT - modify the properties
         put("/events/properties/add/:id",(request, response)-> {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
@@ -184,8 +195,9 @@ public class Server {
                 return om.writeValueAsString("event not found");
             }
         });
-        //remove the properties
-        get("/events/properties/remove/:id",(request, response)-> {
+
+        // DELETE - remove the properties
+        delete("/events/properties/remove/:id",(request, response)-> {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
             PropertiesService prop = new PropertiesService();
@@ -198,16 +210,26 @@ public class Server {
             }
         });
 
-        //search all events with properties
-        get("/events/properties/search",(request, response)-> {
+        // GET - search all events with properties
+        get("/events/properties/search",(request, response)-> { // TODO: what do we search for here ? - nothing is found
             PropertiesService prop = new PropertiesService();
             String groups_allowed = request.queryParams("group_registrations_allowed");
             String groupsize = request.queryParams("group_size");
             String active = request.queryParams("active");
             String member = request.queryParams("members_only");
 
-            List allEvents = prop.searchEventbyProp(Boolean.parseBoolean(groups_allowed), Integer.parseInt(groupsize),
-                        Boolean.parseBoolean(active), Boolean.parseBoolean(member));
+            Integer parsed_groupsize = 0;
+            try {
+                if(groupsize != null) {
+                    parsed_groupsize = Integer.parseInt(groupsize);
+                }
+            } catch (NumberFormatException formatException) {
+                parsed_groupsize = 0;
+            }
+
+            List allEvents = prop.searchEventbyProp(Boolean.parseBoolean(groups_allowed), parsed_groupsize,
+                    Boolean.parseBoolean(active), Boolean.parseBoolean(member));
+
             if(allEvents.isEmpty()) {
                 response.status(404);
                 return om.writeValueAsString("no events found");
@@ -217,26 +239,43 @@ public class Server {
         });
 
         /***************************************************** Categories *****************************************************/
-        put("/events/category/add",(request, response)-> {
+        // PUT - add category
+        put("/events/category/add/:id",(request, response)-> { // TODO: why do we need this ?
             CategoryService cat = new CategoryService();
-            String id = request.queryParams("id");
+            String catId = request.queryParams("cat_id");
             String name = request.queryParams("name");
-            cat.add(Integer.parseInt(id),name);
 
-            return om.writeValueAsString("category successfully added");
+            cat.add(Integer.parseInt(catId),name);
+
+            if(cat.findById(Integer.parseInt(catId)) != null) { // check if category was successfully added to list
+                response.status(201);
+                return om.writeValueAsString("category successfully created");
+            } else {
+                response.status(403);
+                return om.writeValueAsString("category creation failed");
+            }
         });
 
+        // PUT - add category to event
         put("/events/category/addto/:id",(request, response)-> {
             String eid = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(eid));
+
             CategoryService cat = new CategoryService();
             String id = request.queryParams("id");
             String name = request.queryParams("name");
+
             cat.addTo(Integer.parseInt(eid),Integer.parseInt(id),name);
 
-            return om.writeValueAsString("category successfully added to event with id "+id);
+            if(event != null) {
+                return om.writeValueAsString("category successfully added to event with id " + id);
+            } else {
+                response.status(404);
+                return om.writeValueAsString("event not found");
+            }
         });
 
+        // GET - find category by id
         get("/events/category/find/:id",(request, response)-> {
             String id = request.params(":id");
             CategoryService cat=new CategoryService();
@@ -249,7 +288,8 @@ public class Server {
             }
         });
 
-        get("/events/category/remove/:id",(request, response)-> {
+        // DELETE - remove category
+        delete("/events/category/remove/:id",(request, response)-> { // TODO: category should be removed from event
             String id = request.params(":id");
             CategoryService cat=new CategoryService();
             Category cate=cat.remove(Integer.parseInt(id));
@@ -260,6 +300,7 @@ public class Server {
                 return om.writeValueAsString("category not found");
             }
         });
+
         // GET - get category list
         get("/events/categories/list", (requet, response) -> {
             CategoryService cate =new CategoryService();
@@ -273,33 +314,55 @@ public class Server {
         });
 
         /***************************************************** Locations *****************************************************/
-        put("/events/location/add",(request, response)-> {
+        // PUT - add location
+        put("/events/location/add",(request, response)-> { // TODO: why do we need this ?
             LocationService locS = new LocationService();
             String address = request.queryParams("address");
             String city = request.queryParams("city");
             String state = request.queryParams("state");
             String country = request.queryParams("country");
             String zipcode = request.queryParams("zipcode");
+
             locS.add(address,city,state,country,zipcode);
 
-            return om.writeValueAsString("location successfully added");
+            if(locS.findByZip(zipcode) != null) {
+                response.status(201);
+                return om.writeValueAsString("location successfully created");
+            } else {
+                response.status(403);
+                return om.writeValueAsString("location creation failed");
+            }
         });
 
+        // PUT - add location to event
         put("/events/location/addto/:id",(request, response)-> {
             String eid = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(eid));
-            LocationService locS = new LocationService();
-            String address = request.queryParams("address");
-            String city = request.queryParams("city");
-            String state = request.queryParams("state");
-            String country = request.queryParams("country");
-            String zipcode = request.queryParams("zipcode");
-            locS.addTo(Integer.parseInt(eid),address,city,state,country,zipcode);
 
-            return om.writeValueAsString("location successfully added to event with id " + eid);
+            if(event != null) {
+                LocationService locS = new LocationService();
+                String address = request.queryParams("address");
+                String city = request.queryParams("city");
+                String state = request.queryParams("state");
+                String country = request.queryParams("country");
+                String zipcode = request.queryParams("zipcode");
+
+                Location location = locS.addTo(Integer.parseInt(eid), address, city, state, country, zipcode);
+
+                if(location != null) {
+                    return om.writeValueAsString("location successfully added to event with id " + eid);
+                } else {
+                    response.status(404);
+                    return om.writeValueAsString("venue not found");
+                }
+            } else {
+                response.status(404);
+                return om.writeValueAsString("event not found");
+            }
         });
 
-        get("/events/location/find/:zip",(request, response)-> {
+        // GET - find event in given location
+        get("/events/location/find/:zip",(request, response)-> { // TODO: should return list of events in the found location for the given zip
             String zip = request.params(":zip");
             LocationService locS=new LocationService();
             ArrayList<Location> loc=locS.findByZip(zip);
@@ -311,7 +374,8 @@ public class Server {
             }
         });
 
-        get("/events/location/remove/:id",(request, response)-> {
+        // DELETE - remove location
+        delete("/events/location/remove/:id",(request, response)-> { // TODO: location should be removed from event
             String id = request.params(":id");
             LocationService locS=new LocationService();
             Location loc=locS.remove(Integer.parseInt(id));
@@ -322,7 +386,8 @@ public class Server {
                 return om.writeValueAsString("location not found");
             }
         });
-        // GET - get category list
+
+        // GET - get location list
         get("/events/location/list", (requet, response) -> {
             LocationService locS =new LocationService();
             List allLocs = locS.findAll();
@@ -333,8 +398,10 @@ public class Server {
                 return om.writeValueAsString(allLocs);
             }
         });
-        /** Favorites */
-        get("/events/fav/list", (requet, response) -> {
+
+        /*****************************************************  Favourites *****************************************************/
+        // GET - favourite events list
+        get("/events/favourites/list", (requet, response) -> {
             FavoritesService fav =new FavoritesService();
             List allFav = fav.getFavorites();
             if(allFav.isEmpty()) {
@@ -382,7 +449,7 @@ public class Server {
         /***************************************************** Ticket *****************************************************/
 
         // POST - book ticket for event
-        post("/events/tickets/book", (request, response) -> {
+        post("/events/tickets/book", (request, response) -> { // TODO: give event id as parameter
             String eventId = request.queryParams("eventId");
             String amount =request.queryParams("amount");
             String userId = request.queryParams("userId");
@@ -397,7 +464,7 @@ public class Server {
         /***************************************************** Order *****************************************************/
 
         // GET - get order list of users
-        get("/events/orders/list/:id", (request, response) -> {
+        get("/events/orders/list/:id", (request, response) -> { // TODO: tickets are not properly stored in order list after book request
             String userId = request.params(":id");
 
             List<Order> orders = OrderService.getOrders(Integer.valueOf(userId));

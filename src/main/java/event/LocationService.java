@@ -18,13 +18,18 @@ public class LocationService {
 
     public static Location addTo(Integer vid,String address, String city, String state, String country, String zipcode) {
         EventService eventService = new EventService();
-        Venue v= eventService.venueList.get(vid);
-        Location newLoc = new Location(address,city,state,country,zipcode);
-        v.setLocation(newLoc);;
-        eventService.venueList.replace(v.getId(),v);
-        eventService.locationList.put(eventService.loc_count,newLoc);
-        eventService.loc_count=eventService.loc_count+1;
-        return newLoc;
+        Venue v = eventService.venueList.get(vid);
+
+        if(v != null) {
+            Location newLoc = new Location(address, city, state, country, zipcode);
+            v.setLocation(newLoc);
+            eventService.venueList.replace(v.getId(), v);
+            eventService.locationList.put(eventService.loc_count, newLoc);
+            eventService.loc_count = eventService.loc_count + 1;
+            return newLoc;
+        } else {
+            return null;
+        }
     }
 
     public static ArrayList<Location> findByZip(String zip) {
