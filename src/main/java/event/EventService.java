@@ -19,10 +19,11 @@ public class EventService {
     public static Map<Integer,Location> locationList = new HashMap();
     public static Integer loc_count;
     public static Map<Integer,User> userList=new HashMap<>();
+    public static Map<Integer, Order> orderList = new HashMap<>();
 
     public EventService(){
-        User julia = new User("Julia","Wanker",23,7343);
-        User ramona = new User("Ramona","Huber",23,7344);
+        User julia = new User("Julia","Wanker",23,7343, null);
+        User ramona = new User("Ramona","Huber",23,7344, null);
         userList.put(julia.getId(),julia);
         userList.put(ramona.getId(),ramona);
     }
@@ -32,7 +33,7 @@ public class EventService {
     }
 
     public static Event add(Integer id, String name, String description, String status, Integer limit, Integer tickets_left,
-                     List<Venue> venueList, DateEv date, List<Category> categories, List<Pricing> price, Properties prop) {
+                            List<Venue> venueList, DateEv date, List<Category> categories, List<Price> price, Properties prop) {
         Event event = new Event(id,name,description,status,limit,tickets_left,venueList,date,categories,price,prop);
         events.put(id, event);
         return event;
@@ -60,7 +61,7 @@ public class EventService {
             try (MongoCursor<Document> cur = collection.find().iterator()) {
                 while (cur.hasNext()) {
                     List<Category> cateList = new ArrayList<>();
-                    List<Pricing> priceList = new ArrayList<>();
+                    List<Price> priceList = new ArrayList<>();
                     List<Venue> venuesList = new ArrayList<>();
 
                     Document doc = cur.next();
@@ -94,7 +95,7 @@ public class EventService {
                     }
 
                     for (Document pricesAsDoc : priceAsDocuments){
-                        priceList.add(new Pricing((String)pricesAsDoc.get("name"),
+                        priceList.add(new Price((String)pricesAsDoc.get("name"),
                                 (Integer) pricesAsDoc.get("amount")));
                     }
                     for (Document catAsDoc : categoryAsDocuments){
@@ -124,10 +125,12 @@ public class EventService {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            // Event e2= (Event)events.get(120);       //Testing
-           // System.out.println("Id: "+e2.getId());
-           // System.out.println("Place of venues: "+e2.getVenueList().get(0).getAddress());
-           // System.out.println("Category: "+e2.getCategories().get(0).getName());
+            /*
+            Event e2= (Event)events.get(120);       //Testing
+            System.out.println("Id: "+e2.getId());
+            System.out.println("Place of venues: "+e2.getVenueList().get(0).getLocation().getAddress());
+            System.out.println("Category: "+e2.getCategories().get(0).getName());
+            */
         } catch (MongoException e) {
                 e.printStackTrace();
         }

@@ -2,9 +2,7 @@ package event;
 
 import java.util.*;
 
-public class VenueService {
-
-    public static Map<Integer, Venue> venues = new HashMap<>();
+public class VenueService {;
 
     public static Venue add(Integer id, String name,Location loc) {
         EventService eventService = new EventService();

@@ -2,13 +2,15 @@ package event;
 
 public class Ticket {
     private Event event;
+    private Integer userId;
     private Integer amount;
-    private User user;
+    private Integer price;
 
-    public Ticket(Event event, Integer amount, User user) {
+    public Ticket(Event event, Integer userId, Integer amount, Integer price) {
         this.event = event;
+        this.userId = userId;
         this.amount = amount;
-        this.user = user;
+        this.price = price;
     }
 
     public Event getEvent() {
@@ -19,6 +21,14 @@ public class Ticket {
         this.event = event;
     }
 
+    public Integer getUser() {
+        return userId;
+    }
+
+    public void setUser(Integer id) {
+        this.userId = id;
+    }
+
     public Integer getAmount() {
         return amount;
     }
@@ -27,11 +37,7 @@ public class Ticket {
         this.amount = amount;
     }
 
-    public User getUser() {
-        return user;
-    }
+    public Integer getPrice() { return price; }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+    public void setPrice(Integer price) { this.price = price; }
 }

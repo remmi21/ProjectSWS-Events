@@ -1,16 +1,24 @@
 package event;
 
+//import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+//import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import java.util.List;
+
+//@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class,property="@id", scope = Order.class)
 public class User {
     private String firstName;
     private String lastName;
     private Integer age;
     private Integer id;
+    private List<Order> orders;
 
-    public User(String firstName, String lastName, Integer age, Integer id) {
+    public User(String firstName, String lastName, Integer age, Integer id, List<Order> orders) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
         this.id = id;
+        this.orders = orders;
     }
 
     public String getFirstName() {
@@ -44,4 +52,8 @@ public class User {
     public void setId(Integer id) {
         this.id = id;
     }
+
+    public List<Order> getOrders() { return orders; }
+
+    public void setOrders(List<Order> orders) { this.orders = orders; }
 }

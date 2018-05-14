@@ -1,29 +1,31 @@
 package event;
 
-import java.util.List;
+//import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+//import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+//@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class,property="@id", scope = Order.class)
 public class Order {
-    private User user;
-    private List<Ticket> tickets;
+    private Integer userId;
+    private Ticket ticket;
 
-    public Order(User user, List<Ticket> tickets) {
-        this.user = user;
-        this.tickets = tickets;
+    public Order(Integer userId, Ticket ticket) {
+        this.userId = userId;
+        this.ticket = ticket;
     }
 
-    public User getUser() {
-        return user;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(Integer id) {
+        this.userId = id;
     }
 
-    public List<Ticket> getTickets() {
-        return tickets;
+    public Ticket getTicket() {
+        return ticket;
     }
 
-    public void setTickets(List<Ticket> tickets) {
-        this.tickets = tickets;
+    public void setTicket(Ticket ticket) {
+        this.ticket = ticket;
     }
 }

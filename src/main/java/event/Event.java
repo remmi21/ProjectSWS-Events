@@ -12,11 +12,11 @@ public class Event {
     private List<Venue> venueList;
     private DateEv date;
     private List<Category> categories;
-    private List<Pricing> price;
+    private List<Price> price;
     private Properties prop;
 
     public Event(Integer id, String name, String description, String status, Integer limit, Integer tickets_left,
-                 List<Venue> venueList, DateEv date, List<Category> categories, List<Pricing> price, Properties prop) {
+                 List<Venue> venueList, DateEv date, List<Category> categories, List<Price> price, Properties prop) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -98,11 +98,11 @@ public class Event {
         this.categories = categories;
     }
 
-    public List<Pricing> getPrice() {
+    public List<Price> getPrice() {
         return price;
     }
 
-    public void setPrice(Pricing price) {
+    public void setPrice(Price price) {
         this.price.add(price);
     }
 
