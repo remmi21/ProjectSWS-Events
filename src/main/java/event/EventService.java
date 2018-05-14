@@ -34,8 +34,10 @@ public class EventService {
 
     public static Event add(Integer id, String name, String description, String status, Integer limit, Integer tickets_left,
                             List<Venue> venueList, DateEv date, List<Category> categories, List<Price> price, Properties prop) {
+
         Event event = new Event(id,name,description,status,limit,tickets_left,venueList,date,categories,price,prop);
         events.put(id, event);
+
         return event;
     }
 

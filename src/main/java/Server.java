@@ -27,7 +27,7 @@ public class Server {
         /***************************************************** Events *****************************************************/
 
         // POST - add event
-        post("/events/new", (request, response) -> {
+        post("/events/new", (request, response) -> { // TODO: reject if given event id is already in db
             String id = request.queryParams("id");
             String name =request.queryParams("name");
             String description = request.queryParams("description");
@@ -42,13 +42,17 @@ public class Server {
 
             Event event = EventService.add(Integer.parseInt(id), name, description, status, Integer.parseInt(limit), Integer.parseInt(tickets_left), venueList, date, categories, price, prop);
 
-            response.status(201); // 201 created
-
-            return om.writeValueAsString(event);
+            if(event != null) {
+                response.status(201); // 201 created
+                return om.writeValueAsString(event);
+            } else {
+                response.status(405); // method not allowed
+                return om.writeValueAsString("an event with id "+id+" is already existing");
+            }
         });
 
         // DELETE - delete event
-        delete("/events/remove/:id", (request, response) -> {
+        delete("/events/remove/:id", (request, response) -> { // TODO: ERROR 404 not found
            String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
             if(event != null) {
@@ -98,7 +102,7 @@ public class Server {
                 String country = request.queryParams("country");
                 String zipcode = request.queryParams("zipcode");
                 Location loc= new Location(address,city,state,country, zipcode);
-                Venue venue = VenueService.add(Integer.parseInt(id), name,loc);
+                Venue venue = VenueService.add(Integer.parseInt(id), name,loc); // TODO: venue id is set to event id here
 
                 return om.writeValueAsString("added venue " + venue + " to event with id " + id);
             } else {
@@ -131,7 +135,7 @@ public class Server {
                 String registrationStart = request.queryParams("registrationStart");
                 String registrationEnd = request.queryParams("registrationEnd");
 
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 Date resultingEventStartDate = df.parse(eventStart);
                 Date resultingEventEndDate = df.parse(eventEnd);
                 Date resultingRegistrationStartDate = df.parse(registrationStart);
@@ -148,7 +152,7 @@ public class Server {
 
         // GET - search event by date
         get("/events/date/search/:start", (request, response) -> {
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             Date resultingEventStartDate = df.parse(request.params(":start"));
             ArrayList event = DateEvService.searchEventsByDate(resultingEventStartDate);
             if (event != null) {
@@ -159,6 +163,7 @@ public class Server {
             }
         });
 
+        // TODO: test from here on
         /***************************************************** Properties *****************************************************/
         //modify the properties
         put("/events/properties/add/:id",(request, response)-> {
