@@ -1,6 +1,7 @@
 package event;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class CategoryService {
@@ -39,9 +40,10 @@ public class CategoryService {
         if(event != null) {
             List<Category> categoryList = event.getCategories();
 
-            for(Category cat : categoryList) {
+            for(Iterator<Category> cit = categoryList.iterator(); cit.hasNext();) {
+                Category cat = cit.next();
                 if (cat.getId() == cid) {
-                    categoryList.remove(cat);
+                    cit.remove();
                     eventService.catList.remove(cid);
 
                     return event;

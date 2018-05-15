@@ -9,16 +9,6 @@ import java.util.List;
 
 import static spark.Spark.*;
 
-// TODO: nullpointer exception handling when parsing ints :
-/*Integer parsed_int = 0;
-try {
-        if(string_to_parse != null) {
-        parsed_int = Integer.parseInt(string_to_prase);
-        }
-        } catch (NumberFormatException formatException) {
-        parsed_int = 0;
-        }
-*/
 public class Server {
     private static EventService eventService = new EventService();
     private static ObjectMapper om = new ObjectMapper();
@@ -50,13 +40,39 @@ public class Server {
             List<Price> price = new ArrayList<>(); // price is then added by calling /events/pricing/add
             Properties prop = new Properties(); // properties are then added by calling /events/properties/add
 
-            Event checkEvent = EventService.findById(Integer.parseInt(id));
+            int parsed_id = 0;
+            try {
+                if (id != null) {
+                    parsed_id = Integer.parseInt(id);
+                }
+            } catch (NumberFormatException formatException) {
+                parsed_id = 0;
+            }
+
+            if(parsed_id == 0) {
+                response.status(500);
+                return om.writeValueAsString("invalid event id");
+            }
+
+            Event checkEvent = EventService.findById(parsed_id);
             if(checkEvent != null) {
                 response.status(403); // forbidden
                 return om.writeValueAsString("event with id "+ id +" already exists");
             }
 
-            Event event = EventService.add(Integer.parseInt(id), name, description, status, Integer.parseInt(limit), Integer.parseInt(tickets_left), venueList, date, categories, price, prop);
+            int parsed_limit=0, parsed_tickets_left=0;
+            try {
+                if (limit != null) {
+                    parsed_limit = Integer.parseInt(limit);
+                }
+                if (tickets_left != null) {
+                    parsed_tickets_left = Integer.parseInt(tickets_left);
+                }
+            } catch (NumberFormatException formatException) {
+
+            }
+
+            Event event = EventService.add(parsed_id, name, description, status, parsed_limit, parsed_tickets_left, venueList, date, categories, price, prop);
 
             if(event != null) {
                 response.status(201); // 201 created
@@ -105,8 +121,6 @@ public class Server {
         });
 
         /***************************************************** Venues *****************************************************/
-        // TODO: check where location add function takes venue from -> venue is in event list but is not found when adding location (404)
-
         // PUT - add venue to event
         put("/events/venue/add/:id", (request, response) -> { // TODO: add location to overall location list
             String id = request.params(":id");
@@ -122,7 +136,21 @@ public class Server {
                 String zipcode = request.queryParams("zipcode");
                 Location loc= new Location(address,city,state,country, zipcode);
 
-                Venue venue = VenueService.add(Integer.parseInt(id), Integer.parseInt(venueId), name,loc);
+                int parsed_venueId = 0;
+                try {
+                    if (venueId != null) {
+                        parsed_venueId = Integer.parseInt(venueId);
+                    }
+                } catch (NumberFormatException formatException) {
+                    parsed_venueId = 0;
+                }
+
+                if(parsed_venueId == 0) {
+                    response.status(500);
+                    return om.writeValueAsString("invalid venue id");
+                }
+
+                Venue venue = VenueService.add(Integer.parseInt(id), parsed_venueId, name,loc);
 
                 if(venue != null) {
                     return om.writeValueAsString("added venue " + venue.getName() + "(" + venue.getId() +") to event with id " + id);
@@ -161,8 +189,8 @@ public class Server {
             }
         });
 
-        // DELETE - delete venue from event
-        delete("/events/venue/remove/:id", (request, response) -> {
+        // PUT - delete venue from event
+        put("/events/venue/remove/:id", (request, response) -> {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
 
@@ -171,8 +199,21 @@ public class Server {
 
                 VenueService venueService = new VenueService();
 
-            // TODO: java.lang.NumberFormatException: null here (should be solved when proper exception handling is implemented)
-                venueService.remove(Integer.parseInt(id), Integer.parseInt(venueId));
+                int parsed_venueId = 0;
+                try {
+                    if (venueId != null) {
+                        parsed_venueId = Integer.parseInt(venueId);
+                    }
+                } catch (NumberFormatException formatException) {
+                    parsed_venueId = 0;
+                }
+
+                if(parsed_venueId == 0) {
+                    response.status(500);
+                    return om.writeValueAsString("invalid venue id");
+                }
+
+                venueService.remove(Integer.parseInt(id), parsed_venueId);
 
                 return om.writeValueAsString("venue was successfully removed from event with id " + id);
             } else {
@@ -248,7 +289,16 @@ public class Server {
                 String active = request.queryParams("active");
                 String member = request.queryParams("members_only");
 
-                prop.add(event.getId(), Boolean.parseBoolean(groups_allowed), Integer.parseInt(groupsize),
+                int parsed_groupsize = 0;
+                try {
+                    if (groupsize != null) {
+                        parsed_groupsize = Integer.parseInt(groupsize);
+                    }
+                } catch (NumberFormatException formatException) {
+                    parsed_groupsize = 0;
+                }
+
+                prop.add(event.getId(), Boolean.parseBoolean(groups_allowed), parsed_groupsize,
                         Boolean.parseBoolean(active), Boolean.parseBoolean(member));
                 return om.writeValueAsString("properties successfully added to event with id " + id);
             }else {
@@ -279,7 +329,7 @@ public class Server {
             String active = request.queryParams("active");
             String member = request.queryParams("members_only");
 
-            Integer parsed_groupsize = 0;
+            int parsed_groupsize = 0;
             try {
                 if(groupsize != null) {
                     parsed_groupsize = Integer.parseInt(groupsize);
@@ -301,14 +351,28 @@ public class Server {
 
         /***************************************************** Categories *****************************************************/
         // PUT - add category
-        put("/events/category/add",(request, response)-> { // TODO: why do we need this ?
+        put("/events/category/add",(request, response)-> { // TODO: add categories to overall category list when adding category to event (function is not needed then)
             CategoryService cat = new CategoryService();
             String catId = request.queryParams("cat_id");
             String name = request.queryParams("name");
 
-            cat.add(Integer.parseInt(catId),name);
+            int parsed_catId = 0;
+            try {
+                if (catId != null) {
+                    parsed_catId = Integer.parseInt(catId);
+                }
+            } catch (NumberFormatException formatException) {
+                parsed_catId = 0;
+            }
 
-            if(cat.findById(Integer.parseInt(catId)) != null) { // check if category was successfully added to list
+            if(parsed_catId == 0) {
+                response.status(500);
+                return om.writeValueAsString("invalid category id");
+            }
+
+            cat.add(parsed_catId,name);
+
+            if(cat.findById(parsed_catId) != null) { // check if category was successfully added to list
                 response.status(201);
                 return om.writeValueAsString("category successfully created");
             } else {
@@ -326,7 +390,21 @@ public class Server {
             String catId = request.queryParams("cat_id");
             String name = request.queryParams("name");
 
-            cat.addTo(Integer.parseInt(eid),Integer.parseInt(catId),name);
+            int parsed_catId = 0;
+            try {
+                if (catId != null) {
+                    parsed_catId = Integer.parseInt(catId);
+                }
+            } catch (NumberFormatException formatException) {
+                parsed_catId = 0;
+            }
+
+            if(parsed_catId == 0) {
+                response.status(500);
+                return om.writeValueAsString("invalid category id");
+            }
+
+            cat.addTo(Integer.parseInt(eid),parsed_catId,name);
 
             if(event != null) {
                 return om.writeValueAsString("category successfully added to event with id " + eid);
@@ -349,17 +427,31 @@ public class Server {
             }
         });
 
-        // DELETE - remove category
-        delete("/events/category/remove/:id",(request, response)-> {
+        // PUT - delete category from event
+        put("/events/category/remove/:id",(request, response)-> { // TODO: category not found -> maybe due to wrong search because of overall category list -> may be solved when categories are added to event, then add them to overall category list
             String eventId = request.params(":id");
             EventService eventService = new EventService();
             Event event = eventService.findById(Integer.parseInt(eventId));
 
             if(event != null) {
                 CategoryService categoryService = new CategoryService();
-                String catId = request.queryParams("cat_id"); // TODO: nullpointer exception (should be solved after adding exceptin handling)
+                String catId = request.queryParams("cat_id");
 
-                event = categoryService.remove(Integer.parseInt(eventId), Integer.parseInt(catId));
+                int parsed_catId = 0;
+                try {
+                    if (catId != null) {
+                        parsed_catId = Integer.parseInt(catId);
+                    }
+                } catch (NumberFormatException formatException) {
+                    parsed_catId = 0;
+                }
+
+                if(parsed_catId == 0) {
+                    response.status(500);
+                    return om.writeValueAsString("invalid category id");
+                }
+
+                event = categoryService.remove(Integer.parseInt(eventId), parsed_catId);
 
                 if (event != null) {
                     return om.writeValueAsString("category was successfully removed");
@@ -387,7 +479,7 @@ public class Server {
 
         /***************************************************** Locations *****************************************************/
         // PUT - add location
-        put("/events/location/add",(request, response)-> { // TODO: why do we need this ?
+        put("/events/location/add",(request, response)-> { // TODO: same as with category: when adding location to venue, add location to overall location list (this functions is not needed then)
             LocationService locS = new LocationService();
             String address = request.queryParams("address");
             String city = request.queryParams("city");
@@ -407,7 +499,7 @@ public class Server {
         });
 
         // PUT - add location to event
-        put("/events/location/addto/:id",(request, response)-> {
+        put("/events/location/addto/:id",(request, response)-> { // TODO: add location to overall locations list when adding it to venue
             String eid = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(eid));
 
@@ -420,7 +512,21 @@ public class Server {
                 String country = request.queryParams("country");
                 String zipcode = request.queryParams("zipcode");
 
-                Location location = locS.addTo(Integer.parseInt(venueId), address, city, state, country, zipcode);
+                int parsed_venueId = 0;
+                try {
+                    if (venueId != null) {
+                        parsed_venueId = Integer.parseInt(venueId);
+                    }
+                } catch (NumberFormatException formatException) {
+                    parsed_venueId = 0;
+                }
+
+                if(parsed_venueId == 0) {
+                    response.status(500);
+                    return om.writeValueAsString("invalid venue id");
+                }
+
+                Location location = locS.addTo(parsed_venueId, address, city, state, country, zipcode);
 
                 if(location != null) {
                     return om.writeValueAsString("location successfully added to venue with id " + venueId + " in event with id " + eid);
@@ -435,7 +541,7 @@ public class Server {
         });
 
         // GET - find event in given location
-        get("/events/location/find/:zip",(request, response)-> { // TODO: no locations found although valid zipcode was used
+        get("/events/location/find/:zip",(request, response)-> { // TODO: no locations found although valid zipcode was used -> this may be due to not solvig locations in overall location list when they are added to a venue
             String zip = request.params(":zip");
             LocationService locationService = new LocationService();
             ArrayList<Event> events = locationService.findByZip(zip);
@@ -447,17 +553,32 @@ public class Server {
             }
         });
 
-        // DELETE - remove location
-        delete("/events/location/remove/:id",(request, response)-> {
+        // PUT - delete location from venue
+        put("/events/location/remove/:id",(request, response)-> {
             String venueId = request.params(":id");
             VenueService venueService = new VenueService();
             Venue venue = venueService.findById(Integer.parseInt(venueId));
 
             if(venue != null) {
-                String lid = request.queryParams("loc_id");
+                String lid = request.queryParams("loc_id"); // TODO: what is location id ??
                 String zipCode = request.queryParams("zipcode");
                 LocationService locationService = new LocationService();
-                Venue venueDelLoc = locationService.remove(Integer.parseInt(venueId), Integer.parseInt(lid), zipCode);
+
+                int parsed_locId = 0;
+                try {
+                    if (lid != null) {
+                        parsed_locId = Integer.parseInt(lid);
+                    }
+                } catch (NumberFormatException formatException) {
+                    parsed_locId = 0;
+                }
+
+                if(parsed_locId == 0) {
+                    response.status(500);
+                    return om.writeValueAsString("invalid location id");
+                }
+
+                Venue venueDelLoc = locationService.remove(Integer.parseInt(venueId), parsed_locId, zipCode);
                 if (venueDelLoc != null) {
                     return om.writeValueAsString("location was successfully removed from venue "+venueDelLoc);
                 } else {
@@ -506,7 +627,16 @@ public class Server {
                 String name = request.queryParams("name");
                 String priceValue = request.queryParams("price_value");
 
-                PriceService.addPrice(Integer.parseInt(id), name, Integer.parseInt(priceValue));
+                int parsed_price = 0;
+                try {
+                    if (priceValue != null) {
+                        parsed_price = Integer.parseInt(priceValue);
+                    }
+                } catch (NumberFormatException formatException) {
+                    parsed_price = 0;
+                }
+
+                PriceService.addPrice(Integer.parseInt(id), name, parsed_price);
 
                 return om.writeValueAsString("price successfully added to event with id " + id);
             } else {
@@ -532,7 +662,7 @@ public class Server {
         /***************************************************** Ticket *****************************************************/
 
         // POST - book ticket for event
-        post("/events/tickets/book/:id", (request, response) -> { // TODO: price not calculated properly
+        post("/events/tickets/book/:id", (request, response) -> {
             String eventId = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(eventId));
 
@@ -540,7 +670,19 @@ public class Server {
                 String amount = request.queryParams("amount");
                 String userId = request.queryParams("user_id");
 
-                Ticket ticket = TicketService.bookTicket(Integer.valueOf(eventId), Integer.valueOf(amount), Integer.valueOf(userId));
+                int parsed_amount=0, parsed_user_id=0;
+                try {
+                    if (amount != null) {
+                        parsed_amount = Integer.parseInt(amount);
+                    }
+                    if(userId != null) {
+                        parsed_user_id = Integer.parseInt(userId);
+                    }
+                } catch (NumberFormatException formatException) {
+
+                }
+
+                Ticket ticket = TicketService.bookTicket(Integer.parseInt(eventId), parsed_amount, parsed_user_id);
 
                 response.status(201); // 201 created
                 return om.writeValueAsString(ticket);
@@ -556,7 +698,7 @@ public class Server {
         get("/events/orders/list/:id", (request, response) -> {
             String userId = request.params(":id");
 
-            List<Order> orders = OrderService.getOrders(Integer.valueOf(userId));
+            List<Order> orders = OrderService.getOrders(Integer.parseInt(userId));
 
             if(orders != null) {
                 if (!orders.isEmpty()) {

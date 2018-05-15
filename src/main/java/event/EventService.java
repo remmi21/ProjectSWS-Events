@@ -12,7 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-// TODO: strange date formats are added to db
+// TODO: newly created stuff is not stored in DB !!!!
 
 public class EventService {
     public static Map<Integer, Event> events = new HashMap();

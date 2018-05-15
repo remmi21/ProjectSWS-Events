@@ -45,9 +45,11 @@ public class VenueService {;
 
         if(event != null) {
             List <Venue> venueList = event.getVenueList();
-            for(Venue v : venueList) {
+
+            for(Iterator<Venue> vit = venueList.iterator(); vit.hasNext();) { // for(Venue v : venueList)
+                Venue v = vit.next();
                 if(v.getId().equals(venueId)) {
-                    venueList.remove(v);
+                    vit.remove();
                     event.setVenueList(venueList);
                 }
             }
