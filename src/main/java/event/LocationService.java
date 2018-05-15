@@ -1,7 +1,6 @@
 package event;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,21 +31,43 @@ public class LocationService {
         }
     }
 
-    public static ArrayList<Location> findByZip(String zip) {
+    public static ArrayList<Event> findByZip(String zip) {
         EventService eventService = new EventService();
-        ArrayList<Location> result=new ArrayList<>();
-        Map<Integer,Location> locs= new HashMap();
-        locs= eventService.locationList;
-        for (Location l : locs.values()){
-            if(l.getZipcode().equals(zip)==true){
-                result.add(l);
+        ArrayList<Event> resultingEvents = new ArrayList<>();
+
+        Map<Integer, Venue> venues = eventService.venueList;
+
+        Map<Integer, Event> eventList = eventService.events;
+
+        for (Venue v : venues.values()){
+            if(v.getLocation().getZipcode().equals(zip)) {
+                for(Event e : eventList.values()) {
+                    if(e.getVenueList().contains(v)) {
+                        resultingEvents.add(e);
+                    }
+                }
             }
         }
-        return result;
+        return resultingEvents;
     }
-    public static Location remove(Integer id) {
+    public static Venue remove(Integer vid, Integer lid, String zipCode) {
         EventService eventService = new EventService();
-        return eventService.locationList.remove(id);
+        Venue venue = eventService.venueList.get(vid);
+
+        if(venue != null) {
+            Location location = venue.getLocation();
+
+            if(location.getZipcode().equals(zipCode)) {
+                venue.setLocation(null);
+                eventService.locationList.remove(lid);
+
+                return venue;
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 
     public List findAll() {

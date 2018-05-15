@@ -12,6 +12,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+// TODO: strange date formats are added to db
+
 public class EventService {
     public static Map<Integer, Event> events = new HashMap();
     public static Map<Integer,Venue> venueList = new HashMap();
@@ -19,11 +21,12 @@ public class EventService {
     public static Map<Integer,Location> locationList = new HashMap();
     public static Integer loc_count;
     public static Map<Integer,User> userList=new HashMap<>();
-    public static Map<Integer, Order> orderList = new HashMap<>();
+
+    public static ArrayList<Order> orderList = new ArrayList<>();
 
     public EventService(){
-        User julia = new User("Julia","Wanker",23,7343, null);
-        User ramona = new User("Ramona","Huber",23,7344, null);
+        User julia = new User("Julia","Wanker",23,7343, orderList);
+        User ramona = new User("Ramona","Huber",23,7344, orderList);
         userList.put(julia.getId(),julia);
         userList.put(ramona.getId(),ramona);
     }
@@ -50,7 +53,7 @@ public class EventService {
     }
 
     public void loadMongoEvents(){
-        DateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
         Integer ticketLeft=0;
         Integer ticketLimit=0;
         loc_count=0;
@@ -71,7 +74,6 @@ public class EventService {
                     List<Document> categoryAsDocuments = (ArrayList)doc.get("Categories");
                     List<Document> dateAsDocuments= (ArrayList)doc.get("Datetimes") ;
                     List<Document> priceAsDocuments= (ArrayList)doc.get("Prices") ;
-
 
                     for (Document dateAsDoc : dateAsDocuments){
                         d=new DateEv((Date)simpleDateFormat.parse((String)dateAsDoc.get("event_start")),
@@ -106,6 +108,7 @@ public class EventService {
                         catList.put((Integer) catAsDoc.get("id"),new Category((Integer) catAsDoc.get("id"),
                                 (String)catAsDoc.get("name")));
                     }
+
                     properties=new Properties((Boolean) doc.get("group_registrations_allowed"),
                             (Integer) doc.get("group_registrations_max"),
                             (Boolean) doc.get("active"),

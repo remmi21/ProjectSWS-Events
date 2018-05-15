@@ -9,6 +9,16 @@ import java.util.List;
 
 import static spark.Spark.*;
 
+// TODO: nullpointer exception handling when parsing ints :
+/*Integer parsed_int = 0;
+try {
+        if(string_to_parse != null) {
+        parsed_int = Integer.parseInt(string_to_prase);
+        }
+        } catch (NumberFormatException formatException) {
+        parsed_int = 0;
+        }
+*/
 public class Server {
     private static EventService eventService = new EventService();
     private static ObjectMapper om = new ObjectMapper();
@@ -27,7 +37,7 @@ public class Server {
         /***************************************************** Events *****************************************************/
 
         // POST - add event
-        post("/events/new", (request, response) -> { // TODO: reject if given event id is already in db
+        post("/events/new", (request, response) -> {
             String id = request.queryParams("id");
             String name =request.queryParams("name");
             String description = request.queryParams("description");
@@ -40,21 +50,28 @@ public class Server {
             List<Price> price = new ArrayList<>(); // price is then added by calling /events/pricing/add
             Properties prop = new Properties(); // properties are then added by calling /events/properties/add
 
+            Event checkEvent = EventService.findById(Integer.parseInt(id));
+            if(checkEvent != null) {
+                response.status(403); // forbidden
+                return om.writeValueAsString("event with id "+ id +" already exists");
+            }
+
             Event event = EventService.add(Integer.parseInt(id), name, description, status, Integer.parseInt(limit), Integer.parseInt(tickets_left), venueList, date, categories, price, prop);
 
             if(event != null) {
                 response.status(201); // 201 created
                 return om.writeValueAsString(event);
             } else {
-                response.status(405); // method not allowed
-                return om.writeValueAsString("an event with id "+id+" is already existing");
+                response.status(500); // internal server error
+                return om.writeValueAsString("event could not be created");
             }
         });
 
         // DELETE - delete event
-        delete("/events/remove/:id", (request, response) -> { // TODO: ERROR 404 not found
-           String id = request.params(":id");
+        delete("/events/remove/:id", (request, response) -> { // TODO: ERROR says event was successfully deleted but is still in events/list and can be found when searching after
+            String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
+
             if(event != null) {
                 eventService.delete(id);
                 return om.writeValueAsString("event with id " + id + " was deleted successfully");
@@ -88,18 +105,15 @@ public class Server {
         });
 
         /***************************************************** Venues *****************************************************/
-        // TODO: delete venue
-        // TODO: return all venues
-
         // TODO: check where location add function takes venue from -> venue is in event list but is not found when adding location (404)
 
         // PUT - add venue to event
-        put("/events/venue/add/:id", (request, response) -> {
+        put("/events/venue/add/:id", (request, response) -> { // TODO: add location to overall location list
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
 
             if(event != null) {
-                String venueId = request.queryParams("venueId");
+                String venueId = request.queryParams("venue_id");
                 String name = request.queryParams("name");
                 String address = request.queryParams("address");
                 String city = request.queryParams("city");
@@ -111,7 +125,7 @@ public class Server {
                 Venue venue = VenueService.add(Integer.parseInt(id), Integer.parseInt(venueId), name,loc);
 
                 if(venue != null) {
-                    return om.writeValueAsString("added venue " + venue + " to event with id " + id);
+                    return om.writeValueAsString("added venue " + venue.getName() + "(" + venue.getId() +") to event with id " + id);
                 } else {
                     response.status(500);
                     return om.writeValueAsString("venue could not be added");
@@ -122,7 +136,7 @@ public class Server {
             }
         });
 
-        // GET - venue by id
+        // GET - find venue by id
         get("/events/venue/search/:id", (request, response) -> {
             Venue venue = VenueService.findById(Integer.valueOf(request.params(":id")));
             if (venue != null) {
@@ -133,19 +147,51 @@ public class Server {
             }
         });
 
-        /***************************************************** Dates *****************************************************/
-        // TODO: delete dates
+        // GET - get venue list
+        get("/events/venue/list", (request, response) -> {
+            VenueService venueService = new VenueService();
 
+            List allVenues = venueService.findAll();
+
+            if(allVenues.isEmpty()) {
+                response.status(404);
+                return om.writeValueAsString("no venues found");
+            } else {
+                return om.writeValueAsString(allVenues);
+            }
+        });
+
+        // DELETE - delete venue from event
+        delete("/events/venue/remove/:id", (request, response) -> {
+            String id = request.params(":id");
+            Event event = eventService.findById(Integer.parseInt(id));
+
+            if(event != null) {
+                String venueId = request.queryParams("venue_id");
+
+                VenueService venueService = new VenueService();
+
+            // TODO: java.lang.NumberFormatException: null here (should be solved when proper exception handling is implemented)
+                venueService.remove(Integer.parseInt(id), Integer.parseInt(venueId));
+
+                return om.writeValueAsString("venue was successfully removed from event with id " + id);
+            } else {
+                response.status(404);
+                return om.writeValueAsString("event not found");
+            }
+        });
+
+        /***************************************************** Dates *****************************************************/
         // PUT - add date to event
         put("/events/date/add/:id", (request, response) -> {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
 
             if(event != null) {
-                String eventStart = request.queryParams("eventStart");
-                String eventEnd = request.queryParams("eventEnd");
-                String registrationStart = request.queryParams("registrationStart");
-                String registrationEnd = request.queryParams("registrationEnd");
+                String eventStart = request.queryParams("event_start");
+                String eventEnd = request.queryParams("event_end");
+                String registrationStart = request.queryParams("registration_start");
+                String registrationEnd = request.queryParams("registration_end");
 
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 Date resultingEventStartDate = df.parse(eventStart);
@@ -175,6 +221,21 @@ public class Server {
             }
         });
 
+        // DELETE - delete date from event
+        delete("/events/date/delete/:id", (request, response) -> {
+            String id = request.params(":id");
+            Event event = eventService.findById(Integer.parseInt(id));
+            DateEvService dateEvService = new DateEvService();
+
+            if (event != null) {
+                dateEvService.removeDate(Integer.parseInt(id));
+                return om.writeValueAsString("date successfully removed from to event with id " + id);
+            }else {
+                response.status(404);
+                return om.writeValueAsString("event not found");
+            }
+        });
+
         /***************************************************** Properties *****************************************************/
         //PUT - modify the properties
         put("/events/properties/add/:id",(request, response)-> {
@@ -196,7 +257,7 @@ public class Server {
             }
         });
 
-        // DELETE - remove the properties
+        // DELETE - remove the properties (resets properties to false)
         delete("/events/properties/remove/:id",(request, response)-> {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
@@ -210,8 +271,8 @@ public class Server {
             }
         });
 
-        // GET - search all events with properties
-        get("/events/properties/search",(request, response)-> { // TODO: what do we search for here ? - nothing is found
+        // GET - search all events with the given properties
+        get("/events/properties/search",(request, response)-> { // TODO: doesn't work properly -> not only events with the searched properties are found
             PropertiesService prop = new PropertiesService();
             String groups_allowed = request.queryParams("group_registrations_allowed");
             String groupsize = request.queryParams("group_size");
@@ -240,7 +301,7 @@ public class Server {
 
         /***************************************************** Categories *****************************************************/
         // PUT - add category
-        put("/events/category/add/:id",(request, response)-> { // TODO: why do we need this ?
+        put("/events/category/add",(request, response)-> { // TODO: why do we need this ?
             CategoryService cat = new CategoryService();
             String catId = request.queryParams("cat_id");
             String name = request.queryParams("name");
@@ -262,13 +323,13 @@ public class Server {
             Event event = eventService.findById(Integer.parseInt(eid));
 
             CategoryService cat = new CategoryService();
-            String id = request.queryParams("id");
+            String catId = request.queryParams("cat_id");
             String name = request.queryParams("name");
 
-            cat.addTo(Integer.parseInt(eid),Integer.parseInt(id),name);
+            cat.addTo(Integer.parseInt(eid),Integer.parseInt(catId),name);
 
             if(event != null) {
-                return om.writeValueAsString("category successfully added to event with id " + id);
+                return om.writeValueAsString("category successfully added to event with id " + eid);
             } else {
                 response.status(404);
                 return om.writeValueAsString("event not found");
@@ -289,20 +350,31 @@ public class Server {
         });
 
         // DELETE - remove category
-        delete("/events/category/remove/:id",(request, response)-> { // TODO: category should be removed from event
-            String id = request.params(":id");
-            CategoryService cat=new CategoryService();
-            Category cate=cat.remove(Integer.parseInt(id));
-            if (cate != null) {
-                return om.writeValueAsString("category was successfully removed");
+        delete("/events/category/remove/:id",(request, response)-> {
+            String eventId = request.params(":id");
+            EventService eventService = new EventService();
+            Event event = eventService.findById(Integer.parseInt(eventId));
+
+            if(event != null) {
+                CategoryService categoryService = new CategoryService();
+                String catId = request.queryParams("cat_id"); // TODO: nullpointer exception (should be solved after adding exceptin handling)
+
+                event = categoryService.remove(Integer.parseInt(eventId), Integer.parseInt(catId));
+
+                if (event != null) {
+                    return om.writeValueAsString("category was successfully removed");
+                } else {
+                    response.status(404); // 404 not found
+                    return om.writeValueAsString("category not found");
+                }
             } else {
-                response.status(404); // 404 not found
-                return om.writeValueAsString("category not found");
+                response.status(404);
+                return om.writeValueAsString("event not found");
             }
         });
 
         // GET - get category list
-        get("/events/categories/list", (requet, response) -> {
+        get("/events/categories/list", (request, response) -> { // TODO: when adding category to event, add category to overall catgory list
             CategoryService cate =new CategoryService();
             List allCats = cate.findAll();
             if(allCats.isEmpty()) {
@@ -341,16 +413,17 @@ public class Server {
 
             if(event != null) {
                 LocationService locS = new LocationService();
+                String venueId = request.queryParams("venue_id");
                 String address = request.queryParams("address");
                 String city = request.queryParams("city");
                 String state = request.queryParams("state");
                 String country = request.queryParams("country");
                 String zipcode = request.queryParams("zipcode");
 
-                Location location = locS.addTo(Integer.parseInt(eid), address, city, state, country, zipcode);
+                Location location = locS.addTo(Integer.parseInt(venueId), address, city, state, country, zipcode);
 
                 if(location != null) {
-                    return om.writeValueAsString("location successfully added to event with id " + eid);
+                    return om.writeValueAsString("location successfully added to venue with id " + venueId + " in event with id " + eid);
                 } else {
                     response.status(404);
                     return om.writeValueAsString("venue not found");
@@ -362,33 +435,43 @@ public class Server {
         });
 
         // GET - find event in given location
-        get("/events/location/find/:zip",(request, response)-> { // TODO: should return list of events in the found location for the given zip
+        get("/events/location/find/:zip",(request, response)-> { // TODO: no locations found although valid zipcode was used
             String zip = request.params(":zip");
-            LocationService locS=new LocationService();
-            ArrayList<Location> loc=locS.findByZip(zip);
-            if (loc.size()>0) {
-                return om.writeValueAsString(loc);
+            LocationService locationService = new LocationService();
+            ArrayList<Event> events = locationService.findByZip(zip);
+            if (events.size()>0) {
+                return om.writeValueAsString(events);
             } else {
                 response.status(404); // 404 not found
-                return om.writeValueAsString("location with zip "+ zip +" not found");
+                return om.writeValueAsString("no events found for location with zip "+ zip);
             }
         });
 
         // DELETE - remove location
-        delete("/events/location/remove/:id",(request, response)-> { // TODO: location should be removed from event
-            String id = request.params(":id");
-            LocationService locS=new LocationService();
-            Location loc=locS.remove(Integer.parseInt(id));
-            if (loc != null) {
-                return om.writeValueAsString("location was successfully removed");
+        delete("/events/location/remove/:id",(request, response)-> {
+            String venueId = request.params(":id");
+            VenueService venueService = new VenueService();
+            Venue venue = venueService.findById(Integer.parseInt(venueId));
+
+            if(venue != null) {
+                String lid = request.queryParams("loc_id");
+                String zipCode = request.queryParams("zipcode");
+                LocationService locationService = new LocationService();
+                Venue venueDelLoc = locationService.remove(Integer.parseInt(venueId), Integer.parseInt(lid), zipCode);
+                if (venueDelLoc != null) {
+                    return om.writeValueAsString("location was successfully removed from venue "+venueDelLoc);
+                } else {
+                    response.status(404); // 404 not found
+                    return om.writeValueAsString("location not found");
+                }
             } else {
-                response.status(404); // 404 not found
-                return om.writeValueAsString("location not found");
+                response.status(404);
+                return om.writeValueAsString("venue not found");
             }
         });
 
         // GET - get location list
-        get("/events/location/list", (requet, response) -> {
+        get("/events/location/list", (request, response) -> {
             LocationService locS =new LocationService();
             List allLocs = locS.findAll();
             if(allLocs.isEmpty()) {
@@ -401,7 +484,7 @@ public class Server {
 
         /*****************************************************  Favourites *****************************************************/
         // GET - favourite events list
-        get("/events/favourites/list", (requet, response) -> {
+        get("/events/favourites/list", (request, response) -> {
             FavoritesService fav =new FavoritesService();
             List allFav = fav.getFavorites();
             if(allFav.isEmpty()) {
@@ -421,7 +504,7 @@ public class Server {
 
             if(event != null) {
                 String name = request.queryParams("name");
-                String priceValue = request.queryParams("priceValue");
+                String priceValue = request.queryParams("price_value");
 
                 PriceService.addPrice(Integer.parseInt(id), name, Integer.parseInt(priceValue));
 
@@ -449,22 +532,28 @@ public class Server {
         /***************************************************** Ticket *****************************************************/
 
         // POST - book ticket for event
-        post("/events/tickets/book", (request, response) -> { // TODO: give event id as parameter
-            String eventId = request.queryParams("eventId");
-            String amount =request.queryParams("amount");
-            String userId = request.queryParams("userId");
+        post("/events/tickets/book/:id", (request, response) -> { // TODO: price not calculated properly
+            String eventId = request.params(":id");
+            Event event = eventService.findById(Integer.parseInt(eventId));
 
-            Ticket ticket = TicketService.bookTicket(Integer.valueOf(eventId), Integer.valueOf(amount), Integer.valueOf(userId));
+            if(event != null) {
+                String amount = request.queryParams("amount");
+                String userId = request.queryParams("user_id");
 
-            response.status(201); // 201 created
+                Ticket ticket = TicketService.bookTicket(Integer.valueOf(eventId), Integer.valueOf(amount), Integer.valueOf(userId));
 
-            return om.writeValueAsString(ticket);
+                response.status(201); // 201 created
+                return om.writeValueAsString(ticket);
+            } else {
+                response.status(404);
+                return om.writeValueAsString("event not found");
+            }
         });
 
         /***************************************************** Order *****************************************************/
 
         // GET - get order list of users
-        get("/events/orders/list/:id", (request, response) -> { // TODO: tickets are not properly stored in order list after book request
+        get("/events/orders/list/:id", (request, response) -> {
             String userId = request.params(":id");
 
             List<Order> orders = OrderService.getOrders(Integer.valueOf(userId));

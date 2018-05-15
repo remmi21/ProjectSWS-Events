@@ -31,9 +31,25 @@ public class CategoryService {
         EventService eventService = new EventService();
         return eventService.catList.get(id);
     }
-    public static Category remove(Integer id) {
+
+    public static Event remove(Integer eid, Integer cid) {
         EventService eventService = new EventService();
-        return eventService.catList.remove(id);
+        Event event = eventService.events.get(eid);
+
+        if(event != null) {
+            List<Category> categoryList = event.getCategories();
+
+            for(Category cat : categoryList) {
+                if (cat.getId() == cid) {
+                    categoryList.remove(cat);
+                    eventService.catList.remove(cid);
+
+                    return event;
+                }
+            }
+        }
+
+        return null;
     }
 
     public List findAll() {

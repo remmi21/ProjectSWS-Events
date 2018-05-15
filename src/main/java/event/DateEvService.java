@@ -5,9 +5,9 @@ import java.util.Date;
 
 public class DateEvService {
 
-    public static void addDate(Integer EventId, Date event_start, Date event_end, Date registration_start, Date registration_end) {
-        DateEv date = new DateEv(event_start, event_end, registration_start, registration_end);
-        Event event = EventService.findById(EventId);
+    public static void addDate(Integer eventId, Date eventStart, Date eventEnd, Date registrationStart, Date registrationEnd) {
+        DateEv date = new DateEv(eventStart, eventEnd, registrationStart, registrationEnd);
+        Event event = EventService.findById(eventId);
 
         event.setDate(date);
     }
@@ -24,5 +24,17 @@ public class DateEvService {
             return result;
         }
         return null;
+    }
+
+    public static Event removeDate(Integer eventId) {
+        EventService eventService = new EventService();
+        Event event = eventService.events.get(eventId);
+
+        DateEv resetDate = new DateEv(null, null, null, null);
+        event.setDate(resetDate);
+
+        eventService.events.replace(event.getId(),event);
+
+        return event;
     }
 }

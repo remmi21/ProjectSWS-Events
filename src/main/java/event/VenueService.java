@@ -15,7 +15,7 @@ public class VenueService {;
             List<Venue> list = e.getVenueList();
             list.add(newVenue);
             e.setVenueList(list);
-            ;
+
             eventService.events.replace(e.getId(), e);
 
             return newVenue;
@@ -37,6 +37,23 @@ public class VenueService {;
         EventService eventService = new EventService();
 
         return new ArrayList<>(eventService.venueList.values());
+    }
+
+    public Event remove(Integer eventId, Integer venueId) {
+        EventService eventService = new EventService();
+        Event event = eventService.findById(eventId);
+
+        if(event != null) {
+            List <Venue> venueList = event.getVenueList();
+            for(Venue v : venueList) {
+                if(v.getId().equals(venueId)) {
+                    venueList.remove(v);
+                    event.setVenueList(venueList);
+                }
+            }
+        }
+
+        return event;
     }
 
 }
