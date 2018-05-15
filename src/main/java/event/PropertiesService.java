@@ -2,7 +2,6 @@ package event;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class PropertiesService {
 
@@ -25,17 +24,14 @@ public class PropertiesService {
         }
 
     public static List<Event> searchEventbyProp(boolean group_registrations_allowed, Integer groupe_size, boolean active, boolean members_only){
-            EventService eventService= new EventService();
-            Map<Integer, Event> ev =eventService.events;
+            ArrayList<Event>ev= new ArrayList<>(EventService.events.values());
             List<Event> resultEvents=new ArrayList<>();
-            Event e;
             Properties p;
-            for (Map.Entry<Integer, Event> entry : ev.entrySet()) {
-                e=entry.getValue();
-                p=e.getProp();
+            for(int i=0; i<ev.size(); i++) {
+                p=ev.get(i).getProp();
                 if(p.isGroup_registrations_allowed()==group_registrations_allowed && p.getGroupe_size()==groupe_size&&
                         p.isActive()==active && p.isMembers_only()==members_only){
-                        resultEvents.add(e);
+                        resultEvents.add(ev.get(i));
                 }
             }
             return resultEvents;
