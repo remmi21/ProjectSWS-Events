@@ -84,12 +84,12 @@ public class Server {
         });
 
         // DELETE - delete event
-        delete("/events/remove/:id", (request, response) -> { // TODO: ERROR says event was successfully deleted but is still in events/list and can be found when searching after
+        delete("/events/remove/:id", (request, response) -> {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
 
             if(event != null) {
-                eventService.delete(id);
+                eventService.delete(Integer.parseInt(id));
                 return om.writeValueAsString("event with id " + id + " was deleted successfully");
             } else {
                 response.status(404);
@@ -122,7 +122,7 @@ public class Server {
 
         /***************************************************** Venues *****************************************************/
         // PUT - add venue to event
-        put("/events/venue/add/:id", (request, response) -> { // TODO: add location to overall location list
+        put("/events/venue/add/:id", (request, response) -> {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
 
@@ -134,7 +134,6 @@ public class Server {
                 String state = request.queryParams("state");
                 String country = request.queryParams("country");
                 String zipcode = request.queryParams("zipcode");
-                Location loc= new Location(address,city,state,country, zipcode);
 
                 int parsed_venueId = 0;
                 try {
@@ -142,7 +141,7 @@ public class Server {
                         parsed_venueId = Integer.parseInt(venueId);
                     }
                 } catch (NumberFormatException formatException) {
-                    parsed_venueId = 0;
+
                 }
 
                 if(parsed_venueId == 0) {
@@ -150,7 +149,9 @@ public class Server {
                     return om.writeValueAsString("invalid venue id");
                 }
 
-                Venue venue = VenueService.add(Integer.parseInt(id), parsed_venueId, name,loc);
+                Location loc= new Location(address, city, state, country, zipcode);
+
+                Venue venue = VenueService.add(Integer.parseInt(id), parsed_venueId, name, loc);
 
                 if(venue != null) {
                     return om.writeValueAsString("added venue " + venue.getName() + "(" + venue.getId() +") to event with id " + id);
@@ -351,7 +352,7 @@ public class Server {
 
         /***************************************************** Categories *****************************************************/
         // PUT - add category
-        put("/events/category/add",(request, response)-> { // TODO: add categories to overall category list when adding category to event (function is not needed then)
+        put("/events/category/add",(request, response)-> {
             CategoryService cat = new CategoryService();
             String catId = request.queryParams("cat_id");
             String name = request.queryParams("name");
@@ -428,7 +429,7 @@ public class Server {
         });
 
         // PUT - delete category from event
-        put("/events/category/remove/:id",(request, response)-> { // TODO: category not found -> maybe due to wrong search because of overall category list -> may be solved when categories are added to event, then add them to overall category list
+        put("/events/category/remove/:id",(request, response)-> {
             String eventId = request.params(":id");
             EventService eventService = new EventService();
             Event event = eventService.findById(Integer.parseInt(eventId));
@@ -466,7 +467,7 @@ public class Server {
         });
 
         // GET - get category list
-        get("/events/categories/list", (request, response) -> { // TODO: when adding category to event, add category to overall catgory list
+        get("/events/categories/list", (request, response) -> {
             CategoryService cate =new CategoryService();
             List allCats = cate.findAll();
             if(allCats.isEmpty()) {
@@ -479,7 +480,7 @@ public class Server {
 
         /***************************************************** Locations *****************************************************/
         // PUT - add location
-        put("/events/location/add",(request, response)-> { // TODO: same as with category: when adding location to venue, add location to overall location list (this functions is not needed then)
+        put("/events/location/add",(request, response)-> {
             LocationService locS = new LocationService();
             String address = request.queryParams("address");
             String city = request.queryParams("city");
@@ -499,7 +500,7 @@ public class Server {
         });
 
         // PUT - add location to event
-        put("/events/location/addto/:id",(request, response)-> { // TODO: add location to overall locations list when adding it to venue
+        put("/events/location/addto/:id",(request, response)-> {
             String eid = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(eid));
 
@@ -541,7 +542,7 @@ public class Server {
         });
 
         // GET - find event in given location
-        get("/events/location/find/:zip",(request, response)-> { // TODO: no locations found although valid zipcode was used -> this may be due to not solvig locations in overall location list when they are added to a venue
+        get("/events/location/find/:zip",(request, response)-> { // TODO: data which is already in database is not found here since we do not load it to gloabal location list
             String zip = request.params(":zip");
             LocationService locationService = new LocationService();
             ArrayList<Event> events = locationService.findByZip(zip);
@@ -560,25 +561,10 @@ public class Server {
             Venue venue = venueService.findById(Integer.parseInt(venueId));
 
             if(venue != null) {
-                String lid = request.queryParams("loc_id"); // TODO: what is location id ??
                 String zipCode = request.queryParams("zipcode");
                 LocationService locationService = new LocationService();
 
-                int parsed_locId = 0;
-                try {
-                    if (lid != null) {
-                        parsed_locId = Integer.parseInt(lid);
-                    }
-                } catch (NumberFormatException formatException) {
-                    parsed_locId = 0;
-                }
-
-                if(parsed_locId == 0) {
-                    response.status(500);
-                    return om.writeValueAsString("invalid location id");
-                }
-
-                Venue venueDelLoc = locationService.remove(Integer.parseInt(venueId), parsed_locId, zipCode);
+                Venue venueDelLoc = locationService.remove(Integer.parseInt(venueId), zipCode);
                 if (venueDelLoc != null) {
                     return om.writeValueAsString("location was successfully removed from venue "+venueDelLoc);
                 } else {

@@ -18,11 +18,16 @@ public class CategoryService {
     public static Category addTo(Integer eid,Integer id, String name) {
         EventService eventService = new EventService();
         Event e= eventService.events.get(eid);
+
         Category newCat = new Category(id, name);
         List<Category> cate= e.getCategories();
+
         cate.add(newCat);
+
         e.setCategories(cate);
         eventService.events.replace(e.getId(),e);
+
+        // add to overall category list
         eventService.catList.put(id,newCat);
 
         return newCat;

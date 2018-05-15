@@ -4,7 +4,7 @@ import java.util.*;
 
 public class VenueService {;
 
-    public static Venue add(Integer eventId, Integer venueId, String name,Location loc) {
+    public static Venue add(Integer eventId, Integer venueId, String name, Location loc) {
         EventService eventService = new EventService();
         Event e = eventService.events.get(eventId);
 
@@ -17,6 +17,10 @@ public class VenueService {;
             e.setVenueList(list);
 
             eventService.events.replace(e.getId(), e);
+
+            // add location to overall location list
+            eventService.locationList.put(eventService.loc_count, loc);
+            eventService.loc_count = eventService.loc_count+1;
 
             return newVenue;
         } else {

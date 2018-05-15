@@ -44,12 +44,22 @@ public class EventService {
         return event;
     }
 
-    public static void delete(String id) {
+    public static void delete(Integer id) {
             events.remove(id);
     }
 
     public static List findAll() {
         return new ArrayList<>(events.values());
+    }
+
+    // helper function
+    public static Object getKeyFromValue(Map map, Object value) {
+        for (Object o : map.keySet()) {
+            if (map.get(o).equals(value)) {
+                return o;
+            }
+        }
+        return null;
     }
 
     public void loadMongoEvents(){

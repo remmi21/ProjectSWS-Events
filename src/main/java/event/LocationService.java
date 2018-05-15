@@ -50,7 +50,7 @@ public class LocationService {
         }
         return resultingEvents;
     }
-    public static Venue remove(Integer vid, Integer lid, String zipCode) {
+    public static Venue remove(Integer vid, String zipCode) {
         EventService eventService = new EventService();
         Venue venue = eventService.venueList.get(vid);
 
@@ -59,7 +59,7 @@ public class LocationService {
 
             if(location.getZipcode().equals(zipCode)) {
                 venue.setLocation(null);
-                eventService.locationList.remove(lid);
+                eventService.locationList.remove(eventService.getKeyFromValue(eventService.locationList, location));
 
                 return venue;
             } else {
