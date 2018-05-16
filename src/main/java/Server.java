@@ -322,16 +322,24 @@ public class Server {
             }
         });
 
-        // GET - search all events with the given properties
-        get("/events/properties/search",(request, response)-> {
+        // POST - search all events with the given properties
+        post("/events/properties/search",(request, response)-> {
             PropertiesService prop = new PropertiesService();
             String groups_allowed = request.queryParams("group_registrations_allowed");
             String groupsize = request.queryParams("group_size");
             String active = request.queryParams("active");
             String member = request.queryParams("members_only");
 
-            Integer size=Integer.parseInt( groupsize);
-            List allEvents = prop.searchEventbyProp(Boolean.parseBoolean(groups_allowed),size,
+            int parsed_groupsize = 0;
+            try {
+                if (groupsize != null) {
+                    parsed_groupsize = Integer.parseInt(groupsize);
+                }
+            } catch (NumberFormatException formatException) {
+                parsed_groupsize = 0;
+            }
+
+            List allEvents = prop.searchEventbyProp(Boolean.parseBoolean(groups_allowed),parsed_groupsize,
                     Boolean.parseBoolean(active), Boolean.parseBoolean(member));
 
             if(allEvents.isEmpty()) {
