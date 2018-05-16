@@ -6,6 +6,7 @@ public class PriceService {
 
     public static void addPrice(Integer eventId, String name, Integer priceValue) {
         Price newPrice = new Price(name, priceValue);
+
         Event event = EventService.findById(eventId);
 
         event.setPrice(newPrice);

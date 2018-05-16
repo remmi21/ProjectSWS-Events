@@ -13,18 +13,20 @@ public class TicketService {
 
         PriceService priceService = new PriceService();
         List<Price> priceList = priceService.findEventPrice(eventId);
-        Integer ticketPrice = 0;
+        Integer ticketPrice = 0, eventPrice=0;
         if(user != null) {
             for(Price price : priceList) {
+                eventPrice = price.getPrice();
                 if(price.getName().equals("Members Admission")) {
-                    ticketPrice = price.getPrice()*amount;
+                    ticketPrice = eventPrice*amount;
+                } else if(price.getName().equals("Free") || price.getPrice() == 0) {
+                    ticketPrice = 0;
                 }
             }
         } else {
             for(Price price : priceList) {
-                if (price.getName().equals("General Admission")) {
-                    ticketPrice = price.getPrice()*amount;
-                }
+                eventPrice = price.getPrice();
+                ticketPrice = eventPrice*amount;
             }
         }
 

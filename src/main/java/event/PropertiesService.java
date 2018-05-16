@@ -25,8 +25,7 @@ public class PropertiesService {
     }
 
     public static List<Event> searchEventbyProp(boolean group_registrations_allowed, Integer groupe_size, boolean active, boolean members_only){
-        EventService eventService = new EventService();
-        ArrayList<Event>ev= new ArrayList<>(eventService.events.values());
+        ArrayList<Event>ev= new ArrayList<>(EventService.events.values());
         List<Event> resultEvents=new ArrayList<>();
         Properties p;
         for(int i=0; i<ev.size(); i++) {
