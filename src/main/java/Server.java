@@ -122,7 +122,7 @@ public class Server {
 
         /***************************************************** Venues *****************************************************/
         // PUT - add venue to event
-        put("/kangarooEvents/venue/new/:id", (request, response) -> {
+        put("/kangarooEvents/events/:id/venue/new", (request, response) -> {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
 
@@ -151,7 +151,7 @@ public class Server {
 
                 Location loc= new Location(address, city, state, country, zipcode);
 
-                Venue venue = VenueService.add(Integer.parseInt(id), parsed_venueId, name, loc);
+                Venue venue = VenueService.add(Integer.parseInt(id), parsed_venueId, "http://localhost:8080/kangarooEvents/venue/"+venueId, name, loc);
 
                 if(venue != null) {
                     return om.writeValueAsString("added venue " + venue.getName() + "(" + venue.getId() +") to event with id " + id);
@@ -191,7 +191,7 @@ public class Server {
         });
 
         // PUT - delete venue from event
-        put("/kangarooEvents/venue/remove/:id", (request, response) -> {
+        put("/kangarooEvents/events/:id/venue/remove", (request, response) -> {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
 
@@ -225,7 +225,7 @@ public class Server {
 
         /***************************************************** Dates *****************************************************/
         // PUT - add date to event
-        put("/kangarooEvents/date/new/:id", (request, response) -> {
+        put("/kangarooEvents/events/:id/date/new", (request, response) -> {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
 
@@ -241,8 +241,7 @@ public class Server {
                 Date resultingRegistrationStartDate = df.parse(registrationStart);
                 Date resultingRegistrationEndDate = df.parse(registrationEnd);
 
-                DateEvService.addDate(Integer.parseInt(id), resultingEventStartDate, resultingEventEndDate, resultingRegistrationStartDate, resultingRegistrationEndDate);
-
+                DateEvService.addDate(Integer.parseInt(id), "http://localhost:8080/kangarooEvents/events/"+id+"/date/new", resultingEventStartDate, resultingEventEndDate, resultingRegistrationStartDate, resultingRegistrationEndDate);
                 return om.writeValueAsString("dates successfully added to event with id " + id);
             } else {
                 response.status(404);
@@ -280,7 +279,7 @@ public class Server {
 
         /***************************************************** Properties *****************************************************/
         //PUT - modify the properties
-        put("/kangarooEvents/events/properties/new/:id",(request, response)-> {
+        put("/kangarooEvents/events/:id/properties/new",(request, response)-> {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
             PropertiesService prop = new PropertiesService();
@@ -383,7 +382,7 @@ public class Server {
         });
 
         // PUT - add category to event
-        put("/kangarooEvents/events/category/:id",(request, response)-> {
+        put("/kangarooEvents/events/:id/category/new",(request, response)-> {
             String eid = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(eid));
 
@@ -500,7 +499,7 @@ public class Server {
         });
 
         // PUT - add location to event
-        put("/kangarooEvents/event/location/:id",(request, response)-> {
+        put("/kangarooEvents/events/:id/location",(request, response)-> {
             String eid = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(eid));
 
@@ -605,7 +604,7 @@ public class Server {
         /***************************************************** Price *****************************************************/
 
         // PUT - add price to event
-        put("/kangarooEvents/events/pricing/new/:id", (request, response) -> {
+        put("/kangarooEvents/events/:id/pricing/new", (request, response) -> {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
 

@@ -86,7 +86,8 @@ public class EventService {
                     List<Document> priceAsDocuments= (ArrayList)doc.get("Prices") ;
 
                     for (Document dateAsDoc : dateAsDocuments){
-                        d=new DateEv((Date)simpleDateFormat.parse((String)dateAsDoc.get("event_start")),
+                        d=new DateEv("http://localhost:8080/kangarooEvents/events/"+doc.get("id")+"/date/new",
+                                (Date)simpleDateFormat.parse((String)dateAsDoc.get("event_start")),
                                 (Date)simpleDateFormat.parse((String)dateAsDoc.get("event_end")),
                                 (Date)simpleDateFormat.parse((String)dateAsDoc.get("registration_start")),
                                 (Date)simpleDateFormat.parse((String)dateAsDoc.get("registration_end")));
@@ -103,8 +104,10 @@ public class EventService {
                         locationList.put(loc_count,loc);
                         loc_count++;
                         venuesList.add(new Venue((Integer) venueAsDoc.get("id"),
+                                "http://localhost:8080/kangarooEvents/venue/"+venueAsDoc.get("id"),
                                 (String)venueAsDoc.get("name"),loc));
                         venueList.put((Integer) venueAsDoc.get("id"),new Venue((Integer) venueAsDoc.get("id"),
+                                "http://localhost:8080/kangarooEvents/venue/"+venueAsDoc.get("id"),
                                 (String)venueAsDoc.get("name"),loc));
                     }
 
@@ -124,7 +127,7 @@ public class EventService {
                             (Boolean) doc.get("active"),
                             (Boolean) doc.get("member_only"));
                     Event e=new Event((Integer) doc.get("id"),
-                            "http://localhost:8080/kangarooEvents/"+(Integer) doc.get("id"),
+                            "http://localhost:8080/kangarooEvents/"+doc.get("id"),
                             (String) doc.get("name"),
                             (String) doc.get("description"),
                             (String) doc.get("status"),
