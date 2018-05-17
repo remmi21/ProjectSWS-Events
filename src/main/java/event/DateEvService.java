@@ -5,8 +5,8 @@ import java.util.Date;
 
 public class DateEvService {
 
-    public static void addDate(Integer eventId, String uri, Date eventStart, Date eventEnd, Date registrationStart, Date registrationEnd) {
-        DateEv date = new DateEv(uri, eventStart, eventEnd, registrationStart, registrationEnd);
+    public static void addDate(Integer eventId, Date eventStart, Date eventEnd, Date registrationStart, Date registrationEnd) {
+        DateEv date = new DateEv(eventStart, eventEnd, registrationStart, registrationEnd);
         Event event = EventService.findById(eventId);
 
         event.setDate(date);
@@ -30,7 +30,7 @@ public class DateEvService {
         EventService eventService = new EventService();
         Event event = eventService.events.get(eventId);
 
-        DateEv resetDate = new DateEv(null, null, null, null, null);
+        DateEv resetDate = new DateEv(null, null, null, null);
         event.setDate(resetDate);
 
         eventService.events.replace(event.getId(),event);

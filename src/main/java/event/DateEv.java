@@ -3,7 +3,6 @@ package event;
 import java.util.Date;
 
 public class DateEv {
-    private String uri;
     private Date eventStart ;
     private Date eventEnd;
     private Date registrationStart;
@@ -13,17 +12,12 @@ public class DateEv {
 
     }
 
-    public DateEv(String uri, Date eventStart, Date eventEnd, Date registrationStart, Date registrationEnd) {
-        this.uri = uri;
+    public DateEv(Date eventStart, Date eventEnd, Date registrationStart, Date registrationEnd) {
         this.eventStart = eventStart;
         this.eventEnd = eventEnd;
         this.registrationStart = registrationStart;
         this.registrationEnd = registrationEnd;
     }
-
-    public String getUri() { return uri; }
-
-    public void setUri(String uri) { this.uri = uri; }
 
     public Date getEventStart()  {
         return eventStart;

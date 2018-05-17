@@ -241,7 +241,7 @@ public class Server {
                 Date resultingRegistrationStartDate = df.parse(registrationStart);
                 Date resultingRegistrationEndDate = df.parse(registrationEnd);
 
-                DateEvService.addDate(Integer.parseInt(id), "http://localhost:8080/kangarooEvents/events/"+id+"/date/new", resultingEventStartDate, resultingEventEndDate, resultingRegistrationStartDate, resultingRegistrationEndDate);
+                DateEvService.addDate(Integer.parseInt(id), resultingEventStartDate, resultingEventEndDate, resultingRegistrationStartDate, resultingRegistrationEndDate);
                 return om.writeValueAsString("dates successfully added to event with id " + id);
             } else {
                 response.status(404);

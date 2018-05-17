@@ -86,8 +86,7 @@ public class EventService {
                     List<Document> priceAsDocuments= (ArrayList)doc.get("Prices") ;
 
                     for (Document dateAsDoc : dateAsDocuments){
-                        d=new DateEv("http://localhost:8080/kangarooEvents/events/"+doc.get("id")+"/date/new",
-                                (Date)simpleDateFormat.parse((String)dateAsDoc.get("event_start")),
+                        d=new DateEv((Date)simpleDateFormat.parse((String)dateAsDoc.get("event_start")),
                                 (Date)simpleDateFormat.parse((String)dateAsDoc.get("event_end")),
                                 (Date)simpleDateFormat.parse((String)dateAsDoc.get("registration_start")),
                                 (Date)simpleDateFormat.parse((String)dateAsDoc.get("registration_end")));
