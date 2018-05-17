@@ -9,7 +9,7 @@ public class CategoryService {
     public static Category add(Integer id, String name) {
         EventService eventService = new EventService();
 
-        Category newCat = new Category(id, name);
+        Category newCat = new Category(id,"/kangarooEvents/category/"+id, name);
         eventService.catList.put(id,newCat);
 
         return newCat;
@@ -19,7 +19,7 @@ public class CategoryService {
         EventService eventService = new EventService();
         Event e= eventService.events.get(eid);
 
-        Category newCat = new Category(id, name);
+        Category newCat = new Category(id,"/kangarooEvents/category/"+id, name);
         List<Category> cate= e.getCategories();
 
         cate.add(newCat);
