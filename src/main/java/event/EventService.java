@@ -38,7 +38,7 @@ public class EventService {
     public static Event add(Integer id, String name, String description, String status, Integer limit, Integer tickets_left,
                             List<Venue> venueList, DateEv date, List<Category> categories, List<Price> price, Properties prop) {
 
-        Event event = new Event(id,"http://localhost:8080/events/search/"+id,name,description,status,limit,tickets_left,venueList,date,categories,price,prop);
+        Event event = new Event(id,"http://localhost:8080/kangarooEvents/"+id,name,description,status,limit,tickets_left,venueList,date,categories,price,prop);
         events.put(id, event);
 
         return event;
@@ -124,7 +124,7 @@ public class EventService {
                             (Boolean) doc.get("active"),
                             (Boolean) doc.get("member_only"));
                     Event e=new Event((Integer) doc.get("id"),
-                            "http://localhost:8080/events/search/"+(Integer) doc.get("id"),
+                            "http://localhost:8080/kangarooEvents/"+(Integer) doc.get("id"),
                             (String) doc.get("name"),
                             (String) doc.get("description"),
                             (String) doc.get("status"),

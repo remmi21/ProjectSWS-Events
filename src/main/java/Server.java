@@ -648,7 +648,7 @@ public class Server {
         /***************************************************** Ticket *****************************************************/
 
         // POST - book ticket for event
-        post("/kangarooEvents/events/tickets/book/:id", (request, response) -> {
+        post("/kangarooEvents/events/:id/tickets", (request, response) -> {
             String eventId = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(eventId));
 
