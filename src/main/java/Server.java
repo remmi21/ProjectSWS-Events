@@ -27,7 +27,7 @@ public class Server {
         /***************************************************** Events *****************************************************/
 
         // POST - add event
-        post("/events/new", (request, response) -> {
+        post("/kangarooEvents/new", (request, response) -> {
             String id = request.queryParams("id");
             String name =request.queryParams("name");
             String description = request.queryParams("description");
@@ -84,7 +84,7 @@ public class Server {
         });
 
         // DELETE - delete event
-        delete("/events/remove/:id", (request, response) -> {
+        delete("/kangarooEvents/remove/:id", (request, response) -> {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
 
@@ -98,7 +98,7 @@ public class Server {
         });
 
         // GET - get event list
-        get("/events/list", (requet, response) -> {
+        get("/kangarooEvents", (requet, response) -> {
             List allEvents = eventService.findAll();
             if(allEvents.isEmpty()) {
                 response.status(404);
@@ -109,7 +109,7 @@ public class Server {
         });
 
         // GET - find event by id
-        get("/events/search/:id", (request, response) -> {
+        get("/kangarooEvents/:id", (request, response) -> {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
             if(event != null) {
@@ -122,7 +122,7 @@ public class Server {
 
         /***************************************************** Venues *****************************************************/
         // PUT - add venue to event
-        put("/events/venue/add/:id", (request, response) -> {
+        put("/kangarooEvents/venue/new/:id", (request, response) -> {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
 
@@ -166,7 +166,7 @@ public class Server {
         });
 
         // GET - find venue by id
-        get("/events/venue/search/:id", (request, response) -> {
+        get("/kangarooEvents/venue/:id", (request, response) -> {
             Venue venue = VenueService.findById(Integer.valueOf(request.params(":id")));
             if (venue != null) {
                 return om.writeValueAsString(venue);
@@ -177,7 +177,7 @@ public class Server {
         });
 
         // GET - get venue list
-        get("/events/venue/list", (request, response) -> {
+        get("/kangarooEvents/venue", (request, response) -> {
             VenueService venueService = new VenueService();
 
             List allVenues = venueService.findAll();
@@ -191,7 +191,7 @@ public class Server {
         });
 
         // PUT - delete venue from event
-        put("/events/venue/remove/:id", (request, response) -> {
+        put("/kangarooEvents/venue/remove/:id", (request, response) -> {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
 
@@ -225,7 +225,7 @@ public class Server {
 
         /***************************************************** Dates *****************************************************/
         // PUT - add date to event
-        put("/events/date/add/:id", (request, response) -> {
+        put("/kangarooEvents/date/new/:id", (request, response) -> {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
 
@@ -251,7 +251,7 @@ public class Server {
         });
 
         // GET - search event by date
-        get("/events/date/search/:start", (request, response) -> {
+        get("/kangarooEvents/date/:start", (request, response) -> {
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             Date resultingEventStartDate = df.parse(request.params(":start"));
             ArrayList event = DateEvService.searchEventsByDate(resultingEventStartDate);
@@ -264,7 +264,7 @@ public class Server {
         });
 
         // DELETE - delete date from event
-        delete("/events/date/delete/:id", (request, response) -> {
+        delete("/kangarooEvents/date/delete/:id", (request, response) -> {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
             DateEvService dateEvService = new DateEvService();
@@ -280,7 +280,7 @@ public class Server {
 
         /***************************************************** Properties *****************************************************/
         //PUT - modify the properties
-        put("/events/properties/add/:id",(request, response)-> {
+        put("/kangarooEvents/events/properties/new/:id",(request, response)-> {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
             PropertiesService prop = new PropertiesService();
@@ -309,7 +309,7 @@ public class Server {
         });
 
         // DELETE - remove the properties (resets properties to false)
-        delete("/events/properties/remove/:id",(request, response)-> {
+        delete("/kangarooEvents/events/properties/remove/:id",(request, response)-> {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
             PropertiesService prop = new PropertiesService();
@@ -323,7 +323,7 @@ public class Server {
         });
 
         // POST - search all events with the given properties
-        post("/events/properties/search",(request, response)-> {
+        post("/kangarooEvents/properties",(request, response)-> {
             PropertiesService prop = new PropertiesService();
             String groups_allowed = request.queryParams("group_registrations_allowed");
             String groupsize = request.queryParams("group_size");
@@ -352,7 +352,7 @@ public class Server {
 
         /***************************************************** Categories *****************************************************/
         // PUT - add category
-        put("/events/category/add",(request, response)-> {
+        put("/kangarooEvents/category/new",(request, response)-> {
             CategoryService cat = new CategoryService();
             String catId = request.queryParams("cat_id");
             String name = request.queryParams("name");
@@ -383,7 +383,7 @@ public class Server {
         });
 
         // PUT - add category to event
-        put("/events/category/addto/:id",(request, response)-> {
+        put("/kangarooEvents/events/category/:id",(request, response)-> {
             String eid = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(eid));
 
@@ -416,7 +416,7 @@ public class Server {
         });
 
         // GET - find category by id
-        get("/events/category/find/:id",(request, response)-> {
+        get("/kangarooEvents/category/:id",(request, response)-> {
             String id = request.params(":id");
             CategoryService cat=new CategoryService();
             Category cate=cat.findById(Integer.parseInt(id));
@@ -429,7 +429,7 @@ public class Server {
         });
 
         // PUT - delete category from event
-        put("/events/category/remove/:id",(request, response)-> {
+        put("/kangarooEvents/events/category/remove/:id",(request, response)-> {
             String eventId = request.params(":id");
             EventService eventService = new EventService();
             Event event = eventService.findById(Integer.parseInt(eventId));
@@ -467,7 +467,7 @@ public class Server {
         });
 
         // GET - get category list
-        get("/events/categories/list", (request, response) -> {
+        get("/kangarooEvents/categories", (request, response) -> {
             CategoryService cate =new CategoryService();
             List allCats = cate.findAll();
             if(allCats.isEmpty()) {
@@ -480,7 +480,7 @@ public class Server {
 
         /***************************************************** Locations *****************************************************/
         // PUT - add location
-        put("/events/location/add",(request, response)-> {
+        put("/kangarooEvents/location/new",(request, response)-> {
             LocationService locS = new LocationService();
             String address = request.queryParams("address");
             String city = request.queryParams("city");
@@ -500,7 +500,7 @@ public class Server {
         });
 
         // PUT - add location to event
-        put("/events/location/addto/:id",(request, response)-> {
+        put("/kangarooEvents/event/location/:id",(request, response)-> {
             String eid = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(eid));
 
@@ -542,7 +542,7 @@ public class Server {
         });
 
         // GET - find event in given location
-        get("/events/location/find/:zip",(request, response)-> { // TODO: data which is already in database is not found here since we do not load it to gloabal location list
+        get("/kangarooEvents/location/:zip",(request, response)-> { // TODO: data which is already in database is not found here since we do not load it to gloabal location list
             String zip = request.params(":zip");
             LocationService locationService = new LocationService();
             ArrayList<Event> events = locationService.findByZip(zip);
@@ -555,7 +555,7 @@ public class Server {
         });
 
         // PUT - delete location from venue
-        put("/events/location/remove/:id",(request, response)-> {
+        put("/kangarooEvents/venues/location/remove/:id",(request, response)-> {
             String venueId = request.params(":id");
             VenueService venueService = new VenueService();
             Venue venue = venueService.findById(Integer.parseInt(venueId));
@@ -578,7 +578,7 @@ public class Server {
         });
 
         // GET - get location list
-        get("/events/location/list", (request, response) -> {
+        get("/kangarooEvents/location", (request, response) -> {
             LocationService locS =new LocationService();
             List allLocs = locS.findAll();
             if(allLocs.isEmpty()) {
@@ -591,7 +591,7 @@ public class Server {
 
         /*****************************************************  Favourites *****************************************************/
         // GET - favourite events list
-        get("/events/favourites/list", (request, response) -> {
+        get("/kangarooEvents/events/favourites", (request, response) -> {
             FavoritesService fav =new FavoritesService();
             List allFav = fav.getFavorites();
             if(allFav.isEmpty()) {
@@ -605,7 +605,7 @@ public class Server {
         /***************************************************** Price *****************************************************/
 
         // PUT - add price to event
-        put("/events/pricing/add/:id", (request, response) -> {
+        put("/kangarooEvents/events/pricing/new/:id", (request, response) -> {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
 
@@ -632,7 +632,7 @@ public class Server {
         });
 
         // GET - get price of event
-        get("/events/pricing/get/:id", (request, response) -> {
+        get("/kangarooEvents/pricing/:id", (request, response) -> {
             String id = request.params(":id");
 
             List<Price> eventPrices = PriceService.findEventPrice(Integer.parseInt(id));
@@ -648,7 +648,7 @@ public class Server {
         /***************************************************** Ticket *****************************************************/
 
         // POST - book ticket for event
-        post("/events/tickets/book/:id", (request, response) -> {
+        post("/kangarooEvents/events/tickets/book/:id", (request, response) -> {
             String eventId = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(eventId));
 
@@ -681,7 +681,7 @@ public class Server {
         /***************************************************** Order *****************************************************/
 
         // GET - get order list of users
-        get("/events/orders/list/:id", (request, response) -> {
+        get("/kangarooEvents/orders/user/:id", (request, response) -> {
             String userId = request.params(":id");
 
             List<Order> orders = OrderService.getOrders(Integer.parseInt(userId));
