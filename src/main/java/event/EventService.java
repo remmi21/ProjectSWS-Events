@@ -116,8 +116,10 @@ public class EventService {
                     }
                     for (Document catAsDoc : categoryAsDocuments){
                         cateList.add(new Category((Integer) catAsDoc.get("id"),
+                                "/kangarooEvents/category/"+catAsDoc.get("id"),
                                 (String)catAsDoc.get("name")));
                         catList.put((Integer) catAsDoc.get("id"),new Category((Integer) catAsDoc.get("id"),
+                                "/kangarooEvents/category/"+catAsDoc.get("id"),
                                 (String)catAsDoc.get("name")));
                     }
 
