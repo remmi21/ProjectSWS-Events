@@ -1,4 +1,5 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import event.*;
 
 import java.text.DateFormat;
@@ -12,6 +13,7 @@ import static spark.Spark.*;
 public class Server {
     private static EventService eventService = new EventService();
     private static ObjectMapper om = new ObjectMapper();
+    private static Gson gson = new Gson();
 
 
     public static void main(String [] args) {
@@ -104,7 +106,8 @@ public class Server {
                 response.status(404);
                 return om.writeValueAsString("no events found");
             } else {
-                return om.writeValueAsString(allEvents);
+                String json = gson.toJson(allEvents);
+                return om.writeValueAsString(json);
             }
         });
 
@@ -113,7 +116,8 @@ public class Server {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
             if(event != null) {
-                return om.writeValueAsString(event);
+                String json = gson.toJson(event);
+                return om.writeValueAsString(json);
             } else {
                 response.status(404);
                 return om.writeValueAsString("event not found");
@@ -546,7 +550,9 @@ public class Server {
             LocationService locationService = new LocationService();
             ArrayList<Event> events = locationService.findByZip(zip);
             if (events.size()>0) {
-                return om.writeValueAsString(events);
+                // Convert object to JSON string and pretty print
+                String json = gson.toJson(events);
+                return om.writeValueAsString(json);
             } else {
                 response.status(404); // 404 not found
                 return om.writeValueAsString("no events found for location with zip "+ zip);
@@ -584,7 +590,8 @@ public class Server {
                 response.status(404);
                 return om.writeValueAsString("no locations found");
             } else {
-                return om.writeValueAsString(allLocs);
+                String json = gson.toJson(allLocs);
+                return om.writeValueAsString(json);
             }
         });
 
@@ -597,7 +604,8 @@ public class Server {
                 response.status(404);
                 return om.writeValueAsString("no events found");
             } else {
-                return om.writeValueAsString(allFav);
+                String json = gson.toJson(allFav);
+                return om.writeValueAsString(json);
             }
         });
 
@@ -637,7 +645,8 @@ public class Server {
             List<Price> eventPrices = PriceService.findEventPrice(Integer.parseInt(id));
 
             if(!eventPrices.isEmpty()) {
-                return om.writeValueAsString(eventPrices);
+                String json = gson.toJson(eventPrices);
+                return om.writeValueAsString(json);
             } else {
                 response.status(404);
                 return om.writeValueAsString("no prices found for the given event");
@@ -687,7 +696,8 @@ public class Server {
 
             if(orders != null) {
                 if (!orders.isEmpty()) {
-                    return om.writeValueAsString(orders);
+                    String json = gson.toJson(orders);
+                    return om.writeValueAsString(json);
                 } else {
                     response.status(404);
                     return om.writeValueAsString("no orders found for the given user");

@@ -5,6 +5,10 @@ public class Category {
     private String Name;
     private  String uri;
 
+    public Category() {
+
+    }
+
     public Category(Integer id,String uri, String name) {
         this.id = id;
         this.uri= uri;
