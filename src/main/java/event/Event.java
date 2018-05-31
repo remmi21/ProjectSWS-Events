@@ -1,11 +1,20 @@
 package event;
 
+import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldId;
+import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldProperty;
+import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldType;
+
 import java.util.List;
 
+@JsonldType("http://schema.org/Event")
 public class Event {
+    @JsonldId
     private Integer id;
+    @JsonldProperty("http://schema.org/name")
     private String name;
+    @JsonldProperty("http://schema.org/description")
     private String description;
+    @JsonldProperty("http://schema.org/eventStatus")
     private String status;
     private Integer limit;
     private Integer tickets_left;
@@ -14,6 +23,7 @@ public class Event {
     private List<Category> categories;
     private List<Price> price;
     private Properties prop;
+    @JsonldProperty("http://schema.org/url")
     private String uri;
 
     public Event(Integer id,String uri, String name, String description, String status, Integer limit, Integer tickets_left,

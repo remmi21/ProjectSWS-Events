@@ -1,6 +1,8 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import event.*;
+import ioinformarics.oss.jackson.module.jsonld.JsonldModule;
+import ioinformarics.oss.jackson.module.jsonld.JsonldResource;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -19,7 +21,7 @@ public class Server {
     public static void main(String [] args) {
         EventService e= new EventService();
         e.loadMongoEvents();
-
+        om.registerModule(new JsonldModule(() -> om.createObjectNode()));
         // Start embedded server at this port
         port(8080);
 
@@ -106,8 +108,8 @@ public class Server {
                 response.status(404);
                 return om.writeValueAsString("no events found");
             } else {
-                String json = gson.toJson(allEvents);
-                return om.writeValueAsString(json);
+                String json=om.writer().writeValueAsString(JsonldResource.Builder.create().build(allEvents));
+                return json;
             }
         });
 
@@ -116,8 +118,8 @@ public class Server {
             String id = request.params(":id");
             Event event = eventService.findById(Integer.parseInt(id));
             if(event != null) {
-                String json = gson.toJson(event);
-                return om.writeValueAsString(json);
+                String json=om.writer().writeValueAsString(JsonldResource.Builder.create().build(event));
+                return json;
             } else {
                 response.status(404);
                 return om.writeValueAsString("event not found");
@@ -173,7 +175,8 @@ public class Server {
         get("/kangarooEvents/venue/:id", (request, response) -> {
             Venue venue = VenueService.findById(Integer.valueOf(request.params(":id")));
             if (venue != null) {
-                return om.writeValueAsString(venue);
+                String json=om.writer().writeValueAsString(JsonldResource.Builder.create().build(venue));
+                return json;
             } else {
                 response.status(404); // 404 not found
                 return om.writeValueAsString("venue not found");
@@ -190,7 +193,8 @@ public class Server {
                 response.status(404);
                 return om.writeValueAsString("no venues found");
             } else {
-                return om.writeValueAsString(allVenues);
+                String json=om.writer().writeValueAsString(JsonldResource.Builder.create().build(allVenues));
+                return json;
             }
         });
 
@@ -259,7 +263,8 @@ public class Server {
             Date resultingEventStartDate = df.parse(request.params(":start"));
             ArrayList event = DateEvService.searchEventsByDate(resultingEventStartDate);
             if (event != null) {
-                return om.writeValueAsString(event);
+                String json=om.writer().writeValueAsString(JsonldResource.Builder.create().build(event));
+                return json;
             } else {
                 response.status(404); // 404 not found
                 return om.writeValueAsString("event not found");
@@ -424,7 +429,8 @@ public class Server {
             CategoryService cat=new CategoryService();
             Category cate=cat.findById(Integer.parseInt(id));
             if (cate != null) {
-                return om.writeValueAsString(cate);
+                String json=om.writer().writeValueAsString(JsonldResource.Builder.create().build(cat));
+                return json;
             } else {
                 response.status(404); // 404 not found
                 return om.writeValueAsString("category not found");
@@ -477,7 +483,8 @@ public class Server {
                 response.status(404);
                 return om.writeValueAsString("no events found");
             } else {
-                return om.writeValueAsString(allCats);
+                String json=om.writer().writeValueAsString(JsonldResource.Builder.create().build(allCats));
+                return json;
             }
         });
 
@@ -551,8 +558,8 @@ public class Server {
             ArrayList<Event> events = locationService.findByZip(zip);
             if (events.size()>0) {
                 // Convert object to JSON string and pretty print
-                String json = gson.toJson(events);
-                return om.writeValueAsString(json);
+                String json=om.writer().writeValueAsString(JsonldResource.Builder.create().build(events));
+                return json;
             } else {
                 response.status(404); // 404 not found
                 return om.writeValueAsString("no events found for location with zip "+ zip);
@@ -590,8 +597,8 @@ public class Server {
                 response.status(404);
                 return om.writeValueAsString("no locations found");
             } else {
-                String json = gson.toJson(allLocs);
-                return om.writeValueAsString(json);
+                String json=om.writer().writeValueAsString(JsonldResource.Builder.create().build(allLocs));
+                return json;
             }
         });
 
@@ -604,8 +611,8 @@ public class Server {
                 response.status(404);
                 return om.writeValueAsString("no events found");
             } else {
-                String json = gson.toJson(allFav);
-                return om.writeValueAsString(json);
+                String json=om.writer().writeValueAsString(JsonldResource.Builder.create().build(allFav));
+                return json;
             }
         });
 
@@ -645,8 +652,8 @@ public class Server {
             List<Price> eventPrices = PriceService.findEventPrice(Integer.parseInt(id));
 
             if(!eventPrices.isEmpty()) {
-                String json = gson.toJson(eventPrices);
-                return om.writeValueAsString(json);
+                String json=om.writer().writeValueAsString(JsonldResource.Builder.create().build(eventPrices));
+                return json;
             } else {
                 response.status(404);
                 return om.writeValueAsString("no prices found for the given event");
@@ -696,8 +703,8 @@ public class Server {
 
             if(orders != null) {
                 if (!orders.isEmpty()) {
-                    String json = gson.toJson(orders);
-                    return om.writeValueAsString(json);
+                    String json=om.writer().writeValueAsString(JsonldResource.Builder.create().build(orders));
+                    return json;
                 } else {
                     response.status(404);
                     return om.writeValueAsString("no orders found for the given user");

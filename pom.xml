@@ -75,7 +75,11 @@
             <artifactId>mongo-java-driver</artifactId>
             <version>3.7.0-rc0</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.io-informatics.oss</groupId>
+            <artifactId>jackson-jsonld</artifactId>
+            <version>0.0.5</version>
+        </dependency>
     </dependencies>
 
 </project>
