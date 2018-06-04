@@ -1,10 +1,19 @@
 package event;
 
+import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldProperty;
+import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldType;
+
+@JsonldType("http://schema.org/PostalAddress")
 public class Location {
+    @JsonldProperty("http://schema.org/streetAddress")
     private String address;
+    @JsonldProperty("http://schema.org/addressLocality")
     private String city;
+    @JsonldProperty("http://schema.org/addressRegion")
     private String state;
+    @JsonldProperty("http://schema.org/addressRegion")
     private String country;
+    @JsonldProperty("http://schema.org/postalCode")
     private String zipcode;
 
     public Location(String address, String city, String state, String country, String zipcode) {

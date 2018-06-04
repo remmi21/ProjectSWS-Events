@@ -1,9 +1,18 @@
 package event;
 
+import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldId;
+import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldProperty;
+import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldType;
+
+@JsonldType("http://schema.org/Organization")
 public class Venue {
+    @JsonldId
     private Integer id;
+    @JsonldProperty("http://schema.org/url")
     private String uri;
+    @JsonldProperty("http://schema.org/name")
     private String name;
+    @JsonldProperty("http://schema.org/location/")
     private Location location;
 
     public Venue(Integer id, String uri, String name, Location location) {

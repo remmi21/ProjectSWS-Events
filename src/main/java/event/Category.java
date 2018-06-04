@@ -1,7 +1,14 @@
 package event;
 
+import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldId;
+import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldProperty;
+import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldType;
+
+@JsonldType("schema.org/category")
 public class Category {
+    @JsonldId
     private Integer id;
+    @JsonldProperty("http://schema.org/name")
     private String Name;
     private  String uri;
 

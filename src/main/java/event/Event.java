@@ -18,8 +18,10 @@ public class Event {
     private String status;
     private Integer limit;
     private Integer tickets_left;
+    @JsonldProperty("http://schema.org/organization")
     private List<Venue> venueList;
     private DateEv date;
+    @JsonldProperty("schema.org/category")
     private List<Category> categories;
     private List<Price> price;
     private Properties prop;
