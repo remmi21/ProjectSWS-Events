@@ -108,7 +108,10 @@ public class Server {
                 response.status(404);
                 return om.writeValueAsString("no events found");
             } else {
-                String json=om.writer().writeValueAsString(JsonldResource.Builder.create().build(allEvents));
+                String json="";
+                for(Object event: allEvents){
+                    json=json+om.writer().writeValueAsString(JsonldResource.Builder.create().build(event));
+                }
                 return json;
             }
         });

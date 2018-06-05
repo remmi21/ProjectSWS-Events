@@ -1,9 +1,14 @@
 package event;
 
+import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldProperty;
+import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldType;
+
+@JsonldType("http://schema.org/Ticket")
 public class Ticket {
     private Event event;
     private Integer userId;
     private Integer amount;
+    @JsonldProperty("http://schema.org/totalPrice")
     private Integer price;
 
     public Ticket(Event event, Integer userId, Integer amount, Integer price) {

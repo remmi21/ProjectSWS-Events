@@ -18,7 +18,7 @@ public class Event {
     private String status;
     private Integer limit;
     private Integer tickets_left;
-    @JsonldProperty("http://schema.org/organization")
+    @JsonldProperty("http://schema.org/ItemList")       //TODO what to use here
     private List<Venue> venueList;
     private DateEv date;
     @JsonldProperty("schema.org/category")
