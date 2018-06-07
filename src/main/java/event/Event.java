@@ -1,6 +1,5 @@
 package event;
 
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldId;
 import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldProperty;
 import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldType;
@@ -17,15 +16,19 @@ public class Event {
     private String description;
     @JsonldProperty("http://schema.org/eventStatus")
     private String status;
+    @JsonldProperty("http://schema.org/maximumAttendeeCapacity")
     private Integer limit;
+    @JsonldProperty("http://schema.org/remainingAttendeeCapacity")
     private Integer tickets_left;
-    @JsonldProperty("http://schema.org/organizer")       //TODO what to use here
+    @JsonldProperty("http://schema.org/organizer")
     private List<Venue> venueList;
+    //@JsonSerialize(using = CostumDateSerializer.class)
+    @JsonldProperty("http://schema.org/startDate")
     private DateEv date;
     @JsonldProperty("schema.org/category")
     private List<Category> categories;
     private List<Price> price;
-    private Properties prop;
+    private Properties prop;        //no matching in Schema.org
     @JsonldProperty("http://schema.org/url")
     private String uri;
 
