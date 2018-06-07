@@ -432,7 +432,7 @@ public class Server {
             CategoryService cat=new CategoryService();
             Category cate=cat.findById(Integer.parseInt(id));
             if (cate != null) {
-                String json=om.writer().writeValueAsString(JsonldResource.Builder.create().build(cat));
+                String json=om.writer().writeValueAsString(JsonldResource.Builder.create().build(cate));
                 return json;
             } else {
                 response.status(404); // 404 not found

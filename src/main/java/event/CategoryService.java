@@ -1,6 +1,7 @@
 package event;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -35,7 +36,14 @@ public class CategoryService {
 
     public static Category findById(Integer id) {
         EventService eventService = new EventService();
-        return eventService.catList.get(id);
+        Collection<Category> categoryList = eventService.catList.values();
+        for(Category i : categoryList){
+            if(id==i.getId()){
+                System.out.println("HIER\n ");
+                return i;
+            }
+        }
+        return null;
     }
 
     public static Event remove(Integer eid, Integer cid) {
