@@ -1,5 +1,6 @@
 package event;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldId;
 import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldProperty;
 import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldType;
@@ -18,7 +19,7 @@ public class Event {
     private String status;
     private Integer limit;
     private Integer tickets_left;
-    @JsonldProperty("http://schema.org/ItemList")       //TODO what to use here
+    @JsonldProperty("http://schema.org/organizer")       //TODO what to use here
     private List<Venue> venueList;
     private DateEv date;
     @JsonldProperty("schema.org/category")

@@ -1,5 +1,6 @@
 package event;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldId;
 import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldProperty;
 import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldType;
@@ -12,7 +13,8 @@ public class Venue {
     private String uri;
     @JsonldProperty("http://schema.org/name")
     private String name;
-    @JsonldProperty("http://schema.org/location/")
+    @JsonSerialize(using = CostumLocationSerializer.class)
+    @JsonldProperty("http://schema.org/location")
     private Location location;
 
     public Venue(Integer id, String uri, String name, Location location) {
