@@ -1,11 +1,19 @@
 package event;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldType;
+
 import java.util.Date;
 
+@JsonldType("http://schema.org/Date")
 public class DateEv {
-    private Date eventStart ;
+    @JsonSerialize(using = CustomDateSerializer.class)
+    private Date eventStart;
+    @JsonSerialize(using = CustomDateSerializer.class)
     private Date eventEnd;
+    @JsonSerialize(using = CustomDateSerializer.class)
     private Date registrationStart;
+    @JsonSerialize(using = CustomDateSerializer.class)
     private Date registrationEnd;
 
     public DateEv() {

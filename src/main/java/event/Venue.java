@@ -13,7 +13,7 @@ public class Venue {
     private String uri;
     @JsonldProperty("http://schema.org/name")
     private String name;
-    @JsonSerialize(using = CostumLocationSerializer.class)
+    @JsonSerialize(using = CustomLocationSerializer.class)
     @JsonldProperty("http://schema.org/location")
     private Location location;
 

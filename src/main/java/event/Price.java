@@ -1,7 +1,13 @@
 package event;
 
+import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldProperty;
+import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldType;
+
+@JsonldType("http://schema.org/PriceSpecification")
 public class Price {
+    @JsonldProperty("http://schema.org/name")
     private String name;
+    @JsonldProperty("http://schema.org/price")
     private int price;
 
     public Price(String name, Integer price) {

@@ -15,7 +15,10 @@ public class PriceService {
     public static List<Price> findEventPrice(Integer eventId) {
         Event event = EventService.findById(eventId);
 
-        List<Price> eventPrices = event.getPrice();
+        List<Price> eventPrices = null;
+        if(event != null) {
+            eventPrices = event.getPrice();
+        }
 
         return eventPrices;
     }

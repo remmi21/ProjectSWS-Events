@@ -8,14 +8,11 @@ import ioinformarics.oss.jackson.module.jsonld.JsonldResource;
 
 import java.io.IOException;
 
-public class CostumLocationSerializer extends StdSerializer<Location> {
+public class CustomLocationSerializer extends StdSerializer<Location> {
     private ObjectMapper mapper = new ObjectMapper();
 
-    public CostumLocationSerializer(){
-        this( null);
-
-    }
-    protected CostumLocationSerializer(Class<Location> t) {
+    public CustomLocationSerializer(){ this( null); }
+    protected CustomLocationSerializer(Class<Location> t) {
         super(t);
     }
 

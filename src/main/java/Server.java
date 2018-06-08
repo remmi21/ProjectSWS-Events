@@ -652,14 +652,19 @@ public class Server {
         get("/kangarooEvents/pricing/:id", (request, response) -> {
             String id = request.params(":id");
 
-            List<Price> eventPrices = PriceService.findEventPrice(Integer.parseInt(id));
+            List <Price> eventPrices = PriceService.findEventPrice(Integer.parseInt(id));
 
-            if(!eventPrices.isEmpty()) {
-                String json=om.writer().writeValueAsString(JsonldResource.Builder.create().build(eventPrices));
-                return json;
+            if(eventPrices != null) {
+                if (!eventPrices.isEmpty()) {
+                    String json = om.writer().writeValueAsString(JsonldResource.Builder.create().build(eventPrices));
+                    return json;
+                } else {
+                    response.status(404);
+                    return om.writeValueAsString("no prices found for the given event");
+                }
             } else {
                 response.status(404);
-                return om.writeValueAsString("no prices found for the given event");
+                return om.writeValueAsString("event not found");
             }
         });
 

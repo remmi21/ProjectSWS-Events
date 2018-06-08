@@ -1,5 +1,6 @@
 package event;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldId;
 import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldProperty;
 import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldType;
@@ -22,18 +23,20 @@ public class Event {
     private Integer tickets_left;
     @JsonldProperty("http://schema.org/organizer")
     private List<Venue> venueList;
-    //@JsonSerialize(using = CostumDateSerializer.class)
+    @JsonSerialize(using = CustomDateEvSerializer.class)
     @JsonldProperty("http://schema.org/startDate")
     private DateEv date;
     @JsonldProperty("schema.org/category")
     private List<Category> categories;
-    private List<Price> price;
+    @JsonldProperty("http://schema.org/offers")
+//  offers -> Offer -> priceSpecification -> PriceSpecification
+    private List<Price> prices;
     private Properties prop;        //no matching in Schema.org
     @JsonldProperty("http://schema.org/url")
     private String uri;
 
     public Event(Integer id,String uri, String name, String description, String status, Integer limit, Integer tickets_left,
-                 List<Venue> venueList, DateEv date, List<Category> categories, List<Price> price, Properties prop) {
+                 List<Venue> venueList, DateEv date, List<Category> categories, List<Price> prices, Properties prop) {
         this.id = id;
         this.uri=uri;
         this.name = name;
@@ -44,7 +47,7 @@ public class Event {
         this.venueList = venueList;
         this.date = date;
         this.categories = categories;
-        this.price = price;
+        this.prices = prices;
         this.prop=prop;
     }
 
@@ -56,8 +59,8 @@ public class Event {
         this.id = id;
     }
 
-    public void setPrice(List<Price> price) {
-        this.price = price;
+    public void setPrice(List<Price> prices) {
+        this.prices = prices;
     }
 
     public String getUri() {
@@ -129,11 +132,11 @@ public class Event {
     }
 
     public List<Price> getPrice() {
-        return price;
+        return prices;
     }
 
     public void setPrice(Price price) {
-        this.price.add(price);
+        this.prices.add(price);
     }
 
     public Properties getProp() {

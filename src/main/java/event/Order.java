@@ -1,9 +1,8 @@
 package event;
 
-//import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-//import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldType;
 
-//@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class,property="@id", scope = Order.class)
+@JsonldType("http://schema.org/Order")
 public class Order {
     private Integer userId;
     private Ticket ticket;
