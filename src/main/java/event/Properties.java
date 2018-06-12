@@ -1,9 +1,17 @@
 package event;
 
+import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldProperty;
+import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldType;
+
+@JsonldType("http://schema.org/PropertyValue")
 public class Properties {
+    @JsonldProperty("http://schema.org/value")
     private boolean group_registrations_allowed;
+    @JsonldProperty("http://schema.org/maxValue")
     private Integer groupe_size;
+    @JsonldProperty("http://schema.org/value")
     private boolean active;
+    @JsonldProperty("http://schema.org/value")
     private boolean members_only;
 
     public Properties() {

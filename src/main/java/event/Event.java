@@ -21,6 +21,7 @@ public class Event {
     private Integer limit;
     @JsonldProperty("http://schema.org/remainingAttendeeCapacity")
     private Integer tickets_left;
+    @JsonSerialize(using = CustomVenueSerializer.class)
     @JsonldProperty("http://schema.org/organizer")
     private List<Venue> venueList;
     @JsonSerialize(using = CustomDateEvSerializer.class)

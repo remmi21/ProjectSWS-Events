@@ -10,6 +10,7 @@ public class Category {
     private Integer id;
     @JsonldProperty("http://schema.org/name")
     private String Name;
+    @JsonldProperty("http://schema.org/url")
     private  String uri;
 
     public Category() {
