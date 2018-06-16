@@ -57,13 +57,17 @@ public class Client {
         JsonNode json_respons;
         while(requesting) {
             System.out.println("Please choose a possible action:");
-            System.out.println("10 Quite");
+            System.out.println("-1) Quit");
             for (int i = 0; i < json.size(); i++) {
-                System.out.println(Integer.toString(i) + ") " + json.get(i).get("action") + json.get(i).get("url"));
+                if (i > 9) {
+                    System.out.println(Integer.toString(i) + ") " + json.get(i).get("action") + json.get(i).get("url"));
+                } else {
+                    System.out.println(" "+Integer.toString(i) + ") " + json.get(i).get("action") + json.get(i).get("url"));
+                }
             }
             input = scan.nextInt();
             switch (input){
-                case 10:
+                case -1:
                     requesting=false;
                     break;
                 case 0:
