@@ -23,9 +23,9 @@ public class Server {
         om.registerModule(new JsonldModule(() -> om.createObjectNode()));
         // Fill array for client orientation
         actionAPI.add(new ActionAPI("GET","/kangarooEvents",0));
-        actionAPI.add(new ActionAPI("GET","/kangarooEvents/:id",1));
+        actionAPI.add(new ActionAPI("GET","/kangarooEvents/",1));
         actionAPI.add(new ActionAPI("POST","/kangarooEvents/new",12));
-        actionAPI.add(new ActionAPI("DELETE","/kangarooEvents/remove/:id",1));
+        actionAPI.add(new ActionAPI("DELETE","/kangarooEvents/remove/",1));
         // Start embedded server at this port
         port(8090);
 
