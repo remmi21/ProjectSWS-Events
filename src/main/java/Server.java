@@ -1,14 +1,13 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import event.*;
+import event.Properties;
 import ioinformarics.oss.jackson.module.jsonld.JsonldModule;
 import ioinformarics.oss.jackson.module.jsonld.JsonldResource;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static spark.Spark.*;
 
@@ -16,17 +15,24 @@ public class Server {
     private static EventService eventService = new EventService();
     private static ObjectMapper om = new ObjectMapper();
     private static Gson gson = new Gson();
-
+    private static List<ActionAPI> actionAPI=new ArrayList<>();
 
     public static void main(String [] args) {
         EventService e= new EventService();
         e.loadMongoEvents();
         om.registerModule(new JsonldModule(() -> om.createObjectNode()));
+        // Fill array for client orientation
+        actionAPI.add(new ActionAPI("GET","/kangarooEvents",0));
+        actionAPI.add(new ActionAPI("GET","/kangarooEvents/:id",1));
+        actionAPI.add(new ActionAPI("POST","/kangarooEvents/new",12));
+        actionAPI.add(new ActionAPI("DELETE","/kangarooEvents/remove/:id",1));
         // Start embedded server at this port
-        port(8080);
+        port(8090);
 
         // Main Page, welcome
-        get("/", (request, response) -> "Welcome");
+        get("/", (requet, response) -> {            // get orientation json back to client
+            return om.writer().writeValueAsString(actionAPI);
+        });
 
         /***************************************************** Events *****************************************************/
 
