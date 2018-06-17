@@ -27,7 +27,7 @@ public class Server {
         actionAPI.add(new ActionAPI("POST","/kangarooEvents/new",12));
         actionAPI.add(new ActionAPI("DELETE","/kangarooEvents/remove/",1));
         // Start embedded server at this port
-        port(8090);
+        port(8080);
 
         // Main Page, welcome
         get("/", (requet, response) -> {            // get orientation json back to client
@@ -47,7 +47,7 @@ public class Server {
             List<Venue> venueList = new ArrayList<>(); // empty venue list is created here, venues are then added by calling /events/venue/add
             DateEv date = new DateEv(); // empty event date object is created here, dates are then added by calling /events/date/add
             List<Category> categories = new ArrayList<>(); // categories then added by calling /events/categories/add
-            List<Price> price = new ArrayList<>(); // price is then added by calling /events/pricing/add
+            List<Offer> price = new ArrayList<>(); // price is then added by calling /events/pricing/add
             Properties prop = new Properties(); // properties are then added by calling /events/properties/add
 
             int parsed_id = 0;
@@ -658,7 +658,7 @@ public class Server {
         get("/kangarooEvents/pricing/:id", (request, response) -> {
             String id = request.params(":id");
 
-            List <Price> eventPrices = PriceService.findEventPrice(Integer.parseInt(id));
+            List<Offer> eventPrices = PriceService.findEventPrice(Integer.parseInt(id));
 
             if(eventPrices != null) {
                 if (!eventPrices.isEmpty()) {

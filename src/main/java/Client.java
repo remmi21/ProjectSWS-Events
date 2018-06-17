@@ -9,7 +9,7 @@ import java.net.URLConnection;
 import java.util.Scanner;
 
 public class Client {
-    private String apiEndpoint="http://localhost:8090";
+    private String apiEndpoint="http://localhost:8080";
 
     public URL creatURL(String request_url, String action,Integer argNum) throws MalformedURLException {
         URL url;
@@ -18,7 +18,7 @@ public class Client {
         System.out.println(action);
         switch(tmp){
             case "GET":
-                System.out.println("Enter and id for the item you search for");
+                System.out.println("Enter an id for the item you search for");
                 String id = scan.next();
                 url=new URL(apiEndpoint+request_url+id);
                 return url;
@@ -54,7 +54,7 @@ public class Client {
         Scanner scan = new Scanner(System.in);
         boolean requesting=true;
         int input;
-        JsonNode json_respons;
+        JsonNode json_response;
         while(requesting) {
             System.out.println("Please choose a possible action:");
             System.out.println("-1) Quit");
@@ -71,14 +71,14 @@ public class Client {
                     requesting=false;
                     break;
                 case 0:
-                    json_respons=c.getJsonrequest(json.get(0).get("url").toString(),json.get(0).get("action").toString(),
+                    json_response=c.getJsonrequest(json.get(0).get("url").toString(),json.get(0).get("action").toString(),
                             json.get(0).get("argNum").toString());
-                    System.out.println(json_respons);
+                    System.out.println(json_response);
                     break;
                 case 1:
-                    json_respons=c.getJsonrequest(json.get(input).get("url").toString(),json.get(input).get("action").toString(),
+                    json_response=c.getJsonrequest(json.get(input).get("url").toString(),json.get(input).get("action").toString(),
                             json.get(input).get("argNum").toString());
-                    System.out.println(json_respons);
+                    System.out.println(json_response);
                     break;
             }
         }
