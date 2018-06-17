@@ -8,8 +8,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Scanner;
 
+// TODO: exception handling
+
 public class Client {
-    private String apiEndpoint="http://localhost:8090";
+    private String apiEndpoint="http://localhost:8080";
 
     public URL creatURL(String request_url, String action,Integer argNum) throws MalformedURLException {
         URL url;
@@ -20,8 +22,44 @@ public class Client {
             case "GET":
                 System.out.println("Enter and id for the item you search for");
                 String id = scan.next();
+
                 url=new URL(apiEndpoint+request_url+id);
                 return url;
+
+            case "PUT":
+                System.out.println("Enter the id for the event you want to edit");
+                String eid = scan.next();
+
+                request_url = request_url.replace(":id:", eid);
+
+                StringBuilder stringBuilder = new StringBuilder();
+
+                stringBuilder.append(request_url);
+                stringBuilder.append("?");
+
+                argNum-=1;
+                int i=0;
+                while (argNum != 0) {
+                    if(i==0)
+                        stringBuilder.append(scan.next());
+                    else
+                        stringBuilder.append("&"+scan.next());
+
+                    argNum--;
+                    i++;
+                }
+
+                String final_url = stringBuilder.toString();
+
+                url = new URL(apiEndpoint+final_url);
+                return url;
+
+            case "POST":
+                break;
+            case "DELETE":
+                break;
+            default:
+                break;
         }
         return null;
     }
@@ -60,9 +98,9 @@ public class Client {
             System.out.println("-1) Quit");
             for (int i = 0; i < json.size(); i++) {
                 if (i > 9) {
-                    System.out.println(Integer.toString(i) + ") " + json.get(i).get("action") + json.get(i).get("url"));
+                    System.out.println(Integer.toString(i) + ") " + json.get(i).get("action").toString().replaceAll("\"", "") + json.get(i).get("url").toString().replaceAll("\"", "") + '\n' + '\t' + json.get(i).get("usage").toString().replaceAll("\"", "") + '\n');
                 } else {
-                    System.out.println(" "+Integer.toString(i) + ") " + json.get(i).get("action") + json.get(i).get("url"));
+                    System.out.println(" "+Integer.toString(i) + ") " + json.get(i).get("action").toString().replaceAll("\"", "") + json.get(i).get("url").toString().replaceAll("\"", "") + '\n' + '\t' + json.get(i).get("usage").toString().replaceAll("\"", "") + '\n');
                 }
             }
             input = scan.nextInt();
@@ -70,12 +108,7 @@ public class Client {
                 case -1:
                     requesting=false;
                     break;
-                case 0:
-                    json_respons=c.getJsonrequest(json.get(0).get("url").toString(),json.get(0).get("action").toString(),
-                            json.get(0).get("argNum").toString());
-                    System.out.println(json_respons);
-                    break;
-                case 1:
+                default:
                     json_respons=c.getJsonrequest(json.get(input).get("url").toString(),json.get(input).get("action").toString(),
                             json.get(input).get("argNum").toString());
                     System.out.println(json_respons);

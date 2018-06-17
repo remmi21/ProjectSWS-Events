@@ -21,13 +21,50 @@ public class Server {
         EventService e= new EventService();
         e.loadMongoEvents();
         om.registerModule(new JsonldModule(() -> om.createObjectNode()));
+
         // Fill array for client orientation
-        actionAPI.add(new ActionAPI("GET","/kangarooEvents",0));
-        actionAPI.add(new ActionAPI("GET","/kangarooEvents/",1));
-        actionAPI.add(new ActionAPI("POST","/kangarooEvents/new",12));
-        actionAPI.add(new ActionAPI("DELETE","/kangarooEvents/remove/",1));
+        // events
+        actionAPI.add(new ActionAPI("GET","/kangarooEvents",0, ""));
+        actionAPI.add(new ActionAPI("GET","/kangarooEvents/",1, "Usage: enter event id"));
+        actionAPI.add(new ActionAPI("POST","/kangarooEvents/new", 11, ""));
+        actionAPI.add(new ActionAPI("DELETE","/kangarooEvents/remove/",1, ""));
+        // venues
+        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/venue", 0, ""));
+        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/venue/", 1, "Usage: enter venue id"));
+        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/:id:/venue/new", 8, "Usage: enter event id + venue_id=id, name=name, address=address, city=city, state=state, country=country, zipcode=zip"));
+        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/:id:/venue/remove", 2, "Usage: enter event id + venue_id=id"));
+        // dates
+        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/date/", 1, "Usage: enter event id"));
+        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/:id:/date/new", 5, "Usage: enter event id + event_start=start, event_end=end, registration_start=start, registration_end=end (FORMAT: yyyy-MM-dd)"));
+        actionAPI.add(new ActionAPI("DELETE", "/kangarooEvents/date/delete/", 1, ""));
+        // properties
+        actionAPI.add(new ActionAPI("POST", "/kangarooEvents/properties", 4, ""));
+        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/:id:/properties/new", 5, "Usage: enter event id + group_registration_allowed=bool, group_size=size, active=bool, mambers_only=bool"));
+        actionAPI.add(new ActionAPI("DELETE", "/kangarooEvents/events/properties/remove/", 1, ""));
+        // categories
+        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/categories", 0, ""));
+        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/category/", 1, "Usage: enter category id"));
+        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/category/new", 2, "Usage: cat_id=id, name=name"));
+        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/:id:/category/new", 3, "Usage: enter event id + cat_id=id, name=name"));
+        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/category/remove/:id:", 2, "Usage: enter category id"));
+        // locations
+        actionAPI.add(new ActionAPI("GET", "/kangarooEvent/location", 0, ""));
+        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/locatoin/", 1, "Usage: enter zip code"));
+        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/location/new", 5, "Usage: address=address, city=city, state=state, country=country, zipcode=zip"));
+        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/:id:/location", 7, "Usage: enter event id + venue_id=id, address=address, city=city, state=state, country=country, zipcode=zip"));
+        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/venues/location/remove/", 2, "Usage: enter venue id + zipcode=zip"));
+        // favourites
+        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/events/favourites", 0, ""));
+        // price
+        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/pricing/", 1, "Usage: enter event id"));
+        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/:id:/pricing/new", 3, "Usage: enter event id + name=name, price_value=price"));
+        // ticket
+        actionAPI.add(new ActionAPI("POST", "/kangarooEvents/events/:id:/tickets", 3, ""));
+        // order
+        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/orders/user/", 1, "Usage: enter user id"));
+
         // Start embedded server at this port
-        port(8090);
+        port(8080);
 
         // Main Page, welcome
         get("/", (requet, response) -> {            // get orientation json back to client
