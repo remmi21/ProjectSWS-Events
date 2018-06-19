@@ -1,13 +1,14 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import event.*;
-import event.Properties;
 import ioinformarics.oss.jackson.module.jsonld.JsonldModule;
 import ioinformarics.oss.jackson.module.jsonld.JsonldResource;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import static spark.Spark.*;
 
@@ -22,46 +23,168 @@ public class Server {
         e.loadMongoEvents();
         om.registerModule(new JsonldModule(() -> om.createObjectNode()));
 
+        // Fill parameter lists
+        ArrayList<String> params_event_list = new ArrayList<String>();
+        ArrayList<String> params_event = new ArrayList<String>(){{
+            add("id");
+        }};
+        ArrayList<String> params_event_new= new ArrayList<String>(){{
+            add("p1");
+            add("p2");
+            add("p3");
+            add("p4");
+            add("p5");
+            add("p6");
+        }};
+        ArrayList<String> params_event_remove = new ArrayList<String>(){{
+            add("id");
+        }};
+        ArrayList<String> params_venue_list = new ArrayList<String>();
+        ArrayList<String> params_venue = new ArrayList<String>(){{
+            add("id");
+        }};
+        ArrayList<String> params_venue_new = new ArrayList<String>(){{
+            add("id");
+            add("venue_id");
+            add("name");
+            add("address");
+            add("city");
+            add("state");
+            add("country");
+            add("zipcode");
+        }};
+        ArrayList<String> params_venue_remove = new ArrayList<String>(){{
+            add("id");
+            add("venue_id");
+        }};
+        ArrayList<String> params_date = new ArrayList<String>(){{
+            add("id");
+        }};
+        ArrayList<String> params_date_new = new ArrayList<String>(){{
+            add("id");
+            add("event_start");
+            add("event_end");
+            add("registration_start");
+            add("registration_end");
+        }};
+        ArrayList<String> params_date_delete = new ArrayList<String>(){{
+            add("id");
+        }};
+        ArrayList<String> params_properties_list = new ArrayList<String>(){{
+            add("group_registrations_allowed");
+            add("group_size");
+            add("active");
+            add("members_only");
+        }};
+        ArrayList<String> params_properties_new = new ArrayList<String>(){{
+            add("id");
+            add("group_registrations_allowed");
+            add("group_size");
+            add("active");
+            add("members_only");
+        }};
+        ArrayList<String> params_properties_remove= new ArrayList<String>(){{
+            add("id");
+        }};
+        ArrayList<String> params_cat_list = new ArrayList<String>();
+        ArrayList<String> params_cat= new ArrayList<String>(){{
+            add("id");
+        }};
+        ArrayList<String> params_cat_new= new ArrayList<String>(){{
+            add("cat_id");
+            add("name");
+        }};
+        ArrayList<String> params_cat_new_event = new ArrayList<String>(){{
+            add("id");
+            add("cat_id");
+            add("name");
+        }};
+        ArrayList<String> params_cat_remove = new ArrayList<String>(){{
+            add("id");
+            add("cat_id");
+        }};
+        ArrayList<String> params_location_list = new ArrayList<String>();
+        ArrayList<String> params_location = new ArrayList<String>(){{
+            add("zipcode");
+        }};
+        ArrayList<String> params_location_new = new ArrayList<String>(){{
+            add("address");
+            add("city");
+            add("state");
+            add("country");
+            add("zipcode");
+        }};
+        ArrayList<String> params_location_event = new ArrayList<String>(){{
+            add("id"); // event id
+            add("venue_id");
+            add("address");
+            add("city");
+            add("state");
+            add("country");
+            add("zipcode");
+        }};
+        ArrayList<String> params_location_remove = new ArrayList<String>(){{
+            add("id"); // venue id
+            add("zipcode");
+        }};
+        ArrayList<String> params_favourites = new ArrayList<String>();
+        ArrayList<String> params_price = new ArrayList<String>(){{
+            add("id"); // event id
+        }};
+        ArrayList<String> params_price_new = new ArrayList<String>(){{
+            add("id"); // event id
+            add("name");
+            add("price_value");
+        }};
+        ArrayList<String> params_ticket = new ArrayList<String>(){{
+            add("id"); // event id
+            add("amount");
+            add("user_id");
+        }};
+        ArrayList<String> params_orders = new ArrayList<String>(){{
+            add("id"); // user id
+        }};
+
         // Fill array for client orientation
         // events
-        actionAPI.add(new ActionAPI("GET","/kangarooEvents",0, ""));
-        actionAPI.add(new ActionAPI("GET","/kangarooEvents/",1, "Usage: enter event id"));
-        actionAPI.add(new ActionAPI("POST","/kangarooEvents/new", 11, ""));
-        actionAPI.add(new ActionAPI("DELETE","/kangarooEvents/remove/",1, ""));
+        actionAPI.add(new ActionAPI("GET","/kangarooEvents",0, params_event_list));
+        actionAPI.add(new ActionAPI("GET","/kangarooEvents/",1, params_event));
+        actionAPI.add(new ActionAPI("POST","/kangarooEvents/new", 6, params_event_new)); // note: params in total 11, to add in request 6
+        actionAPI.add(new ActionAPI("DELETE","/kangarooEvents/remove/",1, params_event_remove));
         // venues
-        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/venue", 0, ""));
-        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/venue/", 1, "Usage: enter venue id"));
-        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/:id:/venue/new", 8, "Usage: enter event id + venue_id=id, name=name, address=address, city=city, state=state, country=country, zipcode=zip"));
-        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/:id:/venue/remove", 2, "Usage: enter event id + venue_id=id"));
+        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/venue", 0, params_venue_list));
+        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/venue/", 1, params_venue));
+        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/:id:/venue/new", 8, params_venue_new));
+        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/:id:/venue/remove", 2, params_venue_remove));
         // dates
-        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/date/", 1, "Usage: enter event id"));
-        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/:id:/date/new", 5, "Usage: enter event id + event_start=start, event_end=end, registration_start=start, registration_end=end (FORMAT: yyyy-MM-dd)"));
-        actionAPI.add(new ActionAPI("DELETE", "/kangarooEvents/date/delete/", 1, ""));
+        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/date/", 1, params_date));
+        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/:id:/date/new", 5, params_date_new));
+        actionAPI.add(new ActionAPI("DELETE", "/kangarooEvents/date/delete/", 1, params_date_delete));
         // properties
-        actionAPI.add(new ActionAPI("POST", "/kangarooEvents/properties", 4, ""));
-        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/:id:/properties/new", 5, "Usage: enter event id + group_registration_allowed=bool, group_size=size, active=bool, mambers_only=bool"));
-        actionAPI.add(new ActionAPI("DELETE", "/kangarooEvents/events/properties/remove/", 1, ""));
+        actionAPI.add(new ActionAPI("POST", "/kangarooEvents/properties", 4, params_properties_list));
+        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/:id:/properties/new", 5, params_properties_new));
+        actionAPI.add(new ActionAPI("DELETE", "/kangarooEvents/events/properties/remove/", 1, params_properties_remove));
         // categories
-        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/categories", 0, ""));
-        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/category/", 1, "Usage: enter category id"));
-        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/category/new", 2, "Usage: cat_id=id, name=name"));
-        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/:id:/category/new", 3, "Usage: enter event id + cat_id=id, name=name"));
-        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/category/remove/:id:", 2, "Usage: enter category id"));
+        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/categories", 0, params_cat_list));
+        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/category/", 1, params_cat));
+        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/category/new", 2, params_cat_new));
+        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/:id:/category/new", 3, params_cat_new_event));
+        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/category/remove/:id:", 2, params_cat_remove));
         // locations
-        actionAPI.add(new ActionAPI("GET", "/kangarooEvent/location", 0, ""));
-        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/locatoin/", 1, "Usage: enter zip code"));
-        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/location/new", 5, "Usage: address=address, city=city, state=state, country=country, zipcode=zip"));
-        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/:id:/location", 7, "Usage: enter event id + venue_id=id, address=address, city=city, state=state, country=country, zipcode=zip"));
-        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/venues/location/remove/", 2, "Usage: enter venue id + zipcode=zip"));
+        actionAPI.add(new ActionAPI("GET", "/kangarooEvent/location", 0, params_location_list));
+        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/locatoin/", 1, params_location));
+        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/location/new", 5, params_location_new));
+        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/:id:/location", 7, params_location_event));
+        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/venues/location/remove/", 2, params_location_remove));
         // favourites
-        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/events/favourites", 0, ""));
+        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/events/favourites", 0, params_favourites));
         // price
-        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/pricing/", 1, "Usage: enter event id"));
-        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/:id:/pricing/new", 3, "Usage: enter event id + name=name, price_value=price"));
+        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/pricing/", 1, params_price));
+        actionAPI.add(new ActionAPI("PUT", "/kangarooEvents/events/:id:/pricing/new", 3, params_price_new));
         // ticket
-        actionAPI.add(new ActionAPI("POST", "/kangarooEvents/events/:id:/tickets", 3, ""));
+        actionAPI.add(new ActionAPI("POST", "/kangarooEvents/events/:id:/tickets", 3, params_ticket));
         // order
-        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/orders/user/", 1, "Usage: enter user id"));
+        actionAPI.add(new ActionAPI("GET", "/kangarooEvents/orders/user/", 1, params_orders));
 
         // Start embedded server at this port
         port(8080);

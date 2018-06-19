@@ -1,16 +1,18 @@
 package event;
 
+import java.util.ArrayList;
+
 public class ActionAPI {
     private String url;
     private String action;
     private int argNum;
-    private String usage;
+    private ArrayList<String> parameters;
 
-    public ActionAPI( String action,String url, int argNum, String usage) {
+    public ActionAPI( String action,String url, int argNum, ArrayList<String> parameters) {
         this.url = url;
         this.action = action;
         this.argNum = argNum;
-        this.usage = usage;
+        this.parameters = parameters;
     }
 
     public String getUrl() {
@@ -37,12 +39,12 @@ public class ActionAPI {
         this.argNum = argNum;
     }
 
-    public String getUsage() {
-        return usage;
+    public ArrayList<String> getParameters() {
+        return parameters;
     }
 
-    public void setUsage(String usage) {
-        this.usage = usage;
+    public void setUsage(ArrayList<String> parameters) {
+        this.parameters = parameters;
     }
 
 }
