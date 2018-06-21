@@ -29,8 +29,7 @@ public class Client {
                 url=new URL(apiEndpoint+request_url+id);
                 return url;
 
-            case "PUT":
-
+            default:
                 if(request_url.contains(":id:")) {
                     System.out.print("Enter the id for the event you want to edit" + '\n' + "id=");
                     String eid = scan.next();
@@ -81,15 +80,7 @@ public class Client {
                 }
 
                 return url;
-
-            case "POST":
-                break;
-            case "DELETE":
-                break;
-            default:
-                break;
         }
-        return null;
     }
 
     public JsonNode getJsonrequest(String request_url, String action, String argNum, String parameters) throws IOException {

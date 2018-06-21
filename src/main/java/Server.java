@@ -29,12 +29,12 @@ public class Server {
             add("id");
         }};
         ArrayList<String> params_event_new= new ArrayList<String>(){{
-            add("p1");
-            add("p2");
-            add("p3");
-            add("p4");
-            add("p5");
-            add("p6");
+            add("id");
+            add("name");
+            add("description");
+            add("status");
+            add("limit");
+            add("tickets_left");
         }};
         ArrayList<String> params_event_remove = new ArrayList<String>(){{
             add("id");
