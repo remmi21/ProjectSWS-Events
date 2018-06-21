@@ -94,6 +94,7 @@ public class Client {
 
     public JsonNode getJsonrequest(String request_url, String action, String argNum, String parameters) throws IOException {
         String tmp= request_url.replace("\"","");
+        String a= action.replace("\"","");
         URL url;
         if(Integer.parseInt(argNum)==0) {
             url = new URL(apiEndpoint + tmp);
@@ -103,9 +104,10 @@ public class Client {
             System.out.println(url);
         }
         HttpURLConnection conn = ( HttpURLConnection)url.openConnection();
-        if(action=="PUT"){
+        if(a.equals("PUT")){
             conn.setDoOutput(true);
             conn.setRequestMethod("PUT");
+            System.out.println("i am here");
         }
         System.out.println(conn.getResponseCode());
         InputStream is = conn.getInputStream();
