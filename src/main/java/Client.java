@@ -3,6 +3,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -13,7 +14,7 @@ import java.util.Scanner;
 // TODO: exception handling
 
 public class Client {
-    private String apiEndpoint="http://localhost:8080";
+    private String apiEndpoint="http://localhost:8090";
 
     public URL creatURL(String request_url, String action, Integer argNum, ArrayList<String> parameters) throws MalformedURLException {
         URL url=null;
@@ -101,7 +102,12 @@ public class Client {
             url = creatURL(tmp,action,Integer.parseInt(argNum),params);
             System.out.println(url);
         }
-        URLConnection conn = url.openConnection();
+        HttpURLConnection conn = ( HttpURLConnection)url.openConnection();
+        if(action=="PUT"){
+            conn.setDoOutput(true);
+            conn.setRequestMethod("PUT");
+        }
+        System.out.println(conn.getResponseCode());
         InputStream is = conn.getInputStream();
         ObjectMapper mapper = new ObjectMapper();
         JsonNode json = mapper.readTree(is);
