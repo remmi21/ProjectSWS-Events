@@ -22,6 +22,7 @@ public class CustomOfferSerializer extends StdSerializer<List<Offer>> {
     @Override
     public void serialize(List<Offer> prices, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonGenerationException {
         String serialized="";
+        jsonGenerator.writeStartArray();
         for(int i =0; i<prices.size();i++) {
             jsonGenerator.writeStartObject();
             jsonGenerator.writeObjectFieldStart("@context");
@@ -41,5 +42,6 @@ public class CustomOfferSerializer extends StdSerializer<List<Offer>> {
 
             serialized = serialized + mapper.writeValueAsString(JsonldResource.Builder.create().build(prices));
         }
+        jsonGenerator.writeEndArray();
     }
 }
