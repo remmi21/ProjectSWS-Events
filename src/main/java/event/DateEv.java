@@ -11,10 +11,13 @@ public class DateEv {
     @JsonProperty("http://schema.org/startDate")
     @JsonSerialize(using = CustomDateSerializer.class)
     private Date eventStart;
+    @JsonProperty("http://schema.org/endDate")
     @JsonSerialize(using = CustomDateSerializer.class)
     private Date eventEnd;
+    @JsonProperty("http://kangarooEvent.schema.org/registrationStartDate")
     @JsonSerialize(using = CustomDateSerializer.class)
     private Date registrationStart;
+    @JsonProperty("http://kangarooEvent.schema.org/registrationEndDate")
     @JsonSerialize(using = CustomDateSerializer.class)
     private Date registrationEnd;
 

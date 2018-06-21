@@ -22,6 +22,8 @@ public class CustomDateEvSerializer extends StdSerializer<DateEv> {
             jsonGenerator.writeObjectFieldStart("@context");
             jsonGenerator.writeStringField("eventStart", "http://schema.org/startDate");
             jsonGenerator.writeStringField("eventEnd", "http://schema.org/endDate");
+            jsonGenerator.writeStringField("registrationStart", "http://schema.org/registrationStartDate");
+            jsonGenerator.writeStringField("registrationEnd", "http://schema.org/registrationEndDate");
         jsonGenerator.writeEndObject();
         jsonGenerator.writeStringField("@type", "http://schema.org/Date");
         jsonGenerator.writeStringField("eventStart", String.valueOf(eventDate.getEventStart()));
