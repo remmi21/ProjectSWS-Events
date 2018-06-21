@@ -6,16 +6,17 @@ public class PriceService {
 
     public static void addPrice(Integer eventId, String name, Integer priceValue) {
         Price newPrice = new Price(name, priceValue);
+        Offer newEventPrice = new Offer(newPrice);
 
         Event event = EventService.findById(eventId);
 
-        event.setPrice(newPrice);
+        event.setPrice(newEventPrice);
     }
 
-    public static List<Price> findEventPrice(Integer eventId) {
+    public static List<Offer> findEventPrice(Integer eventId) {
         Event event = EventService.findById(eventId);
 
-        List<Price> eventPrices = null;
+        List<Offer> eventPrices = null;
         if(event != null) {
             eventPrices = event.getPrice();
         }
@@ -24,8 +25,10 @@ public class PriceService {
     }
     public static void removePrice(Integer eventId, String name) {      //set price to 0
         Price newPrice = new Price(name, 0);
+        Offer newEventPrice = new Offer(newPrice);
+
         Event event = EventService.findById(eventId);
 
-        event.setPrice(newPrice);
+        event.setPrice(newEventPrice);
     }
 }

@@ -4,22 +4,21 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldProperty;
 import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldType;
 
-// TODO: class not used yet; think we need offer class in order to reference offers -> Offer -> priceSpecification -> PriceSpecification
 @JsonldType("http://schema.org/Offer")
 public class Offer {
     @JsonSerialize(using = CustomPriceSerializer.class)
     @JsonldProperty("http://schema.org/priceSpecification")
-    private Price eventPrice;
+    private Price priceSpecification;
 
     public Offer(Price price) {
-        this.eventPrice = price;
+        this.priceSpecification = price;
     }
 
     public Price getEventPrice() {
-        return eventPrice;
+        return priceSpecification;
     }
 
-    public void setEventPrice(Price eventPrice) {
-        this.eventPrice = eventPrice;
+    public void setEventPrice(Price priceSpecification) {
+        this.priceSpecification = priceSpecification;
     }
 }

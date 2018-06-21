@@ -30,16 +30,15 @@ public class Event {
     @JsonldProperty("http://kangarooEvent.schema.org/Category")
     @JsonSerialize(using = CustomCategorySerializer.class)
     private List<Category> categories;
-    @JsonldProperty("http://kangarooEvent.schema.org/Prices")
-    private List<Price> prices;
-    @JsonldProperty("http://kangarooEvent.schema.org/Properties")
-    @JsonSerialize(using = CustomPropertySerializer.class)
-    private Properties prop;
+    @JsonSerialize(using = CustomOfferSerializer.class)
+    @JsonldProperty("http://schema.org/offers") // offers -> Offer -> priceSpecification -> PriceSpecification
+    private List<Offer> prices;
+    private Properties prop;        //no matching in Schema.org
     @JsonldProperty("http://schema.org/url")
     private String uri;
 
     public Event(Integer id,String uri, String name, String description, String status, Integer limit, Integer tickets_left,
-                 List<Venue> venueList, DateEv date, List<Category> categories, List<Price> prices, Properties prop) {
+                 List<Venue> venueList, DateEv date, List<Category> categories, List<Offer> prices, Properties prop) {
         this.id = id;
         this.uri=uri;
         this.name = name;
@@ -62,7 +61,7 @@ public class Event {
         this.id = id;
     }
 
-    public void setPrice(List<Price> prices) {
+    public void setPrice(List<Offer> prices) {
         this.prices = prices;
     }
 
@@ -134,11 +133,11 @@ public class Event {
         this.categories = categories;
     }
 
-    public List<Price> getPrice() {
+    public List<Offer> getPrice() {
         return prices;
     }
 
-    public void setPrice(Price price) {
+    public void setPrice(Offer price) {
         this.prices.add(price);
     }
 

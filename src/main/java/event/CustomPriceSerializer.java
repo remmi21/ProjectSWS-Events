@@ -21,10 +21,12 @@ public class CustomPriceSerializer extends StdSerializer<Price> {
     public void serialize(Price price, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();
         jsonGenerator.writeObjectFieldStart("@context");
-        jsonGenerator.writeStringField("eventPrice", "http://schema.org/priceSpecification");
+        jsonGenerator.writeStringField("name", "http://schema.org/name");
+        jsonGenerator.writeStringField("price", "http://schema.org/price");
         jsonGenerator.writeEndObject();
-        jsonGenerator.writeStringField("@type", "http://schema.org/PostalAddress");
-        jsonGenerator.writeStringField("eventPrice", String.valueOf(price.getPrice()));
+        jsonGenerator.writeStringField("@type", "http://schema.org/PriceSpecification");
+        jsonGenerator.writeStringField("name", price.getName());
+        jsonGenerator.writeNumberField("price", price.getPrice());
         jsonGenerator.writeEndObject();
 
         String serialized = mapper.writeValueAsString(JsonldResource.Builder.create().build(price));

@@ -20,6 +20,10 @@ public class EventService {
     public static Map<Integer,Category> catList = new HashMap();
     public static Map<Integer,Location> locationList = new HashMap();
     public static Integer loc_count;
+    public static Map<Integer, Price> priceList = new HashMap();
+    public static Integer price_count;
+    public static Map<Integer, Offer> priceOfferList = new HashMap();
+    public static Integer offer_count;
     public static Map<Integer,User> userList=new HashMap<>();
 
     public static ArrayList<Order> orderList = new ArrayList<>();
@@ -36,7 +40,7 @@ public class EventService {
     }
 
     public static Event add(Integer id, String name, String description, String status, Integer limit, Integer tickets_left,
-                            List<Venue> venueList, DateEv date, List<Category> categories, List<Price> price, Properties prop) {
+                            List<Venue> venueList, DateEv date, List<Category> categories, List<Offer> price, Properties prop) {
 
         Event event = new Event(id,"http://localhost:8080/kangarooEvents/"+id,name,description,status,limit,tickets_left,venueList,date,categories,price,prop);
         events.put(id, event);
@@ -67,6 +71,8 @@ public class EventService {
         Integer ticketLeft=0;
         Integer ticketLimit=0;
         loc_count=0;
+        price_count=0;
+        offer_count=0;
         try {
             MongoClient mongoClient = new MongoClient("localhost", 27017);
             MongoDatabase database = mongoClient.getDatabase("EventsSWS");
@@ -76,7 +82,7 @@ public class EventService {
             try (MongoCursor<Document> cur = collection.find().iterator()) {
                 while (cur.hasNext()) {
                     List<Category> cateList = new ArrayList<>();
-                    List<Price> priceList = new ArrayList<>();
+                    List<Offer> eventPriceList = new ArrayList<>();
                     List<Venue> venuesList = new ArrayList<>();
 
                     Document doc = cur.next();
@@ -111,8 +117,13 @@ public class EventService {
                     }
 
                     for (Document pricesAsDoc : priceAsDocuments){
-                        priceList.add(new Price((String)pricesAsDoc.get("name"),
-                                (Integer) pricesAsDoc.get("amount")));
+                        Price price = new Price((String)pricesAsDoc.get("name"), (Integer)pricesAsDoc.get("amount"));
+                        priceList.put(price_count, price);
+                        price_count++;
+
+                        eventPriceList.add(new Offer(price));
+                        priceOfferList.put(offer_count, new Offer(price));
+                        offer_count++;
                     }
                     for (Document catAsDoc : categoryAsDocuments){
                         cateList.add(new Category((Integer) catAsDoc.get("id"),
@@ -137,7 +148,7 @@ public class EventService {
                             venuesList,
                             d,
                             cateList,
-                            priceList,
+                            eventPriceList,
                             properties);
 
                     events.put((Integer) doc.get("id"),e);

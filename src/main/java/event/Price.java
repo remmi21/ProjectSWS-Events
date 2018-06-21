@@ -8,11 +8,11 @@ public class Price {
     @JsonldProperty("http://schema.org/name")
     private String name;
     @JsonldProperty("http://schema.org/price")
-    private int price;
+    private Integer price;
 
     public Price(String name, Integer price) {
-        this.price = price;
         this.name=name;
+        this.price = price;
     }
 
     public String getName() {
@@ -23,11 +23,11 @@ public class Price {
         this.name = name;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
