@@ -28,7 +28,12 @@ public class Client {
 
                 url=new URL(apiEndpoint+request_url+id);
                 return url;
+            case "DELETE":
+                System.out.print("Enter the id you want to delete"+'\n'+"id=");
+                String id_delete = scan.next();
 
+                url=new URL(apiEndpoint+request_url+id_delete);
+                return url;
             default:
                 if(request_url.contains(":id:")) {
                     System.out.print("Enter the id for the event you want to edit" + '\n' + "id=");
@@ -98,6 +103,12 @@ public class Client {
         if(a.equals("PUT")){
             conn.setDoOutput(true);
             conn.setRequestMethod("PUT");
+        }else if(a.equals("POST")){
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+        }else if(a.equals("DELETE")){
+            conn.setDoOutput(true);
+            conn.setRequestMethod("DELETE");
         }
         System.out.println(conn.getResponseCode());
         InputStream is = conn.getInputStream();
