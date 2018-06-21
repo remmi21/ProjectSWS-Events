@@ -4,7 +4,7 @@ import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldId;
 import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldProperty;
 import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldType;
 
-@JsonldType("schema.org/category")
+@JsonldType("schema.org/Category")
 public class Category {
     @JsonldId
     private Integer id;

@@ -20,6 +20,7 @@ public class CustomVenueSerializer extends StdSerializer<List<Venue>> {
     @Override
     public void serialize(List<Venue> venue, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         String serialized="";
+        jsonGenerator.writeStartArray();
         for(int i =0; i<venue.size();i++) {
             jsonGenerator.writeStartObject();
             jsonGenerator.writeObjectFieldStart("@context");
@@ -51,6 +52,7 @@ public class CustomVenueSerializer extends StdSerializer<List<Venue>> {
 
             serialized = serialized + mapper.writeValueAsString(JsonldResource.Builder.create().build(venue));
         }
+        jsonGenerator.writeEndArray();
 
     }
 }

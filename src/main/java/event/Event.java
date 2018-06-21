@@ -28,10 +28,12 @@ public class Event {
     @JsonldProperty("http://schema.org/startDate")
     private DateEv date;
     @JsonldProperty("http://kangarooEvent.schema.org/Category")
+    @JsonSerialize(using = CustomCategorySerializer.class)
     private List<Category> categories;
     @JsonldProperty("http://kangarooEvent.schema.org/Prices")
     private List<Price> prices;
     @JsonldProperty("http://kangarooEvent.schema.org/Properties")
+    @JsonSerialize(using = CustomPropertySerializer.class)
     private Properties prop;
     @JsonldProperty("http://schema.org/url")
     private String uri;

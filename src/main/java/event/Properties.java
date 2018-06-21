@@ -5,13 +5,13 @@ import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldType;
 
 @JsonldType("http://schema.org/Properties")
 public class Properties {
-    @JsonldProperty("http://schema.org/value")
+    @JsonldProperty("http://schema.org/groupe_registration_allowed")
     private boolean group_registrations_allowed;
-    @JsonldProperty("http://schema.org/maxValue")
+    @JsonldProperty("http://schema.org/groupe_size")
     private Integer groupe_size;
-    @JsonldProperty("http://schema.org/value")
+    @JsonldProperty("http://schema.org/active")
     private boolean active;
-    @JsonldProperty("http://schema.org/value")
+    @JsonldProperty("http://schema.org/members_only")
     private boolean members_only;
 
     public Properties() {
