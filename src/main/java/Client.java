@@ -107,7 +107,6 @@ public class Client {
         if(a.equals("PUT")){
             conn.setDoOutput(true);
             conn.setRequestMethod("PUT");
-            System.out.println("i am here");
         }
         System.out.println(conn.getResponseCode());
         InputStream is = conn.getInputStream();

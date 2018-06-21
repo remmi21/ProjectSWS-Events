@@ -27,12 +27,12 @@ public class Event {
     @JsonSerialize(using = CustomDateEvSerializer.class)
     @JsonldProperty("http://schema.org/startDate")
     private DateEv date;
-    @JsonldProperty("schema.org/category")
+    @JsonldProperty("http://kangarooEvent.schema.org/Category")
     private List<Category> categories;
-    @JsonldProperty("http://schema.org/offers")
-//  offers -> Offer -> priceSpecification -> PriceSpecification
+    @JsonldProperty("http://kangarooEvent.schema.org/Prices")
     private List<Price> prices;
-    private Properties prop;        //no matching in Schema.org
+    @JsonldProperty("http://kangarooEvent.schema.org/Properties")
+    private Properties prop;
     @JsonldProperty("http://schema.org/url")
     private String uri;
 

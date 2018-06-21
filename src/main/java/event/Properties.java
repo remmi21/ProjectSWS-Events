@@ -3,7 +3,7 @@ package event;
 import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldProperty;
 import ioinformarics.oss.jackson.module.jsonld.annotation.JsonldType;
 
-@JsonldType("http://schema.org/PropertyValue")
+@JsonldType("http://schema.org/Properties")
 public class Properties {
     @JsonldProperty("http://schema.org/value")
     private boolean group_registrations_allowed;
