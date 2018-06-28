@@ -29,6 +29,7 @@ public class Server {
             add("id");
         }};
         ArrayList<String> params_event_new= new ArrayList<String>(){{
+            add("");
             add("id");
             add("name");
             add("description");
