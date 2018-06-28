@@ -14,7 +14,7 @@ import java.util.Scanner;
 // TODO: exception handling
 
 public class Client {
-    private String apiEndpoint="http://localhost:8090";
+    private String apiEndpoint="https://kangarooevent.herokuapp.com";
 
     public URL creatURL(String request_url, String action, Integer argNum, ArrayList<String> parameters) throws MalformedURLException {
         URL url=null;
