@@ -188,7 +188,7 @@ public class Server {
         actionAPI.add(new ActionAPI("GET", "/kangarooEvents/orders/user/", 1, params_orders));
 
         // Start embedded server at this port
-        port(5000);
+        port(8090);
 
         // Main Page, welcome
         get("/", (requet, response) -> {            // get orientation json back to client
@@ -327,7 +327,7 @@ public class Server {
 
                 Location loc= new Location(address, city, state, country, zipcode);
 
-                Venue venue = VenueService.add(Integer.parseInt(id), parsed_venueId, "http://localhost:8080/kangarooEvents/venue/"+venueId, name, loc);
+                Venue venue = VenueService.add(Integer.parseInt(id), parsed_venueId, "http://localhost:8090/kangarooEvents/venue/"+venueId, name, loc);
 
                 if(venue != null) {
                     return om.writeValueAsString("added venue " + venue.getName() + "(" + venue.getId() +") to event with id " + id);

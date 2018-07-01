@@ -1,6 +1,7 @@
 package event;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -74,8 +75,9 @@ public class EventService {
         price_count=0;
         offer_count=0;
         try {
-            MongoClient mongoClient = new MongoClient("localhost", 27017);
-            MongoDatabase database = mongoClient.getDatabase("EventsSWS");
+            MongoClientURI uri = new MongoClientURI("mongodb://admin:admin123@ds123971.mlab.com:23971/heroku_73sz319t");
+            MongoClient mongoClient = new MongoClient(uri);
+            MongoDatabase database = mongoClient.getDatabase(uri.getDatabase());
             MongoCollection<Document> collection = database.getCollection("eventsCollection");
             DateEv d=null;
             Properties properties=null;
