@@ -14,7 +14,7 @@ import java.util.Scanner;
 // TODO: exception handling
 
 public class Client {
-    private String apiEndpoint="https://kangarooevent.herokuapp.com";
+    private String apiEndpoint="https://kangaroo-events.herokuapp.com";
 
     public URL creatURL(String request_url, String action, Integer argNum, ArrayList<String> parameters) throws MalformedURLException {
         URL url=null;
@@ -118,7 +118,7 @@ public class Client {
     }
 
 
-    public static void main(String[] args) throws IOException {
+    public static void mainClient(String[] args) throws IOException {
         Client c = new Client();
         String urlString = c.apiEndpoint+"/";
         URL url = new URL(urlString);

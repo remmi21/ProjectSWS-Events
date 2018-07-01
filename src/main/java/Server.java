@@ -188,7 +188,7 @@ public class Server {
         actionAPI.add(new ActionAPI("GET", "/kangarooEvents/orders/user/", 1, params_orders));
 
         // Start embedded server at this port
-        port(8090);
+        port(5000);
 
         // Main Page, welcome
         get("/", (requet, response) -> {            // get orientation json back to client
