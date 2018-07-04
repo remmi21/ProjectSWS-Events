@@ -20,3 +20,8 @@ The Client should then automatically display all the actions which can be perfor
 on the API. Via numbers the actions can be choosen and the API requests all the 
 necessary input parameter in ordert o make the request. 
 The Client can be stopped by typing the number -1. 
+
+##Limitations
+We tried over many hours to deploy the project online at heroku with the domain 
+https://kangarooevent.herokuapp.com/ .
+However, after two days we gave up. Nevertheless, we are open for any suggestions and improvements.   
